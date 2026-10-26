@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSwatt - Catalogue de Quiz</title>
+    
+    <!-- STYLES CSS (Design Moderne, Responsive Smartphone) -->
+    <style>
+        :root {
+            --primary: #2563eb;          /* Bleu EduSwatt */
+            --primary-dark: #1d4ed8;     /* Bleu foncé au survol */
+            --primary-light: #eff6ff;    /* Fond bleu très clair */
+            --success: #16a34a;          /* Vert pour le téléchargement */
+            --danger: #dc2626;           /* Rouge pour les suppressions */
+            --bg: #f8fafc;               /* Fond de page gris doux */
+            --card-bg: #ffffff;          /* Fond des cartes blanc */
+            --text: #0f172a;             /* Texte foncé */
+            --text-muted: #64748b;       /* Texte secondaire gris */
+            --border: #e2e8f0;           /* Bords des conteneurs */
+            --radius: 12px;              /* Arrondi des coins */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Ombre légère */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* En-tête de la page */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .intro-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        /* BOÎTE D'ADMINISTRATION (MASQUÉE PAR DÉFAUT AUX ÉLÈVES) */
+        .admin-panel {
+            display: none; /* Cache le formulaire d'ajout */
+            background: #ffffff;
+            border: 2px dashed var(--primary);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .admin-panel.active {
+            display: block; /* Devient visible uniquement après le bon code secret */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .admin-header h2 {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .btn-close-admin {
+            background: #fef2f2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            color: var(--text);
+            outline: none;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-add {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .btn-add:hover {
+            background: var(--primary-dark);
+        }
+
+        /* BOUTONS DES 4 CATÉGORIES (ACCORDÉONS) */
+        .categories-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .category-button {
+            width: 100%;
+            padding: 16px;
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: var(--radius);
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .category-button:hover {
+            border-color: var(--primary);
+        }
+
+        .category-button.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .category-button .arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .category-button.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* CONTENU DÉROULLANT D'UNE CATÉGORIE */
+        .quiz-panel {
+            display: none;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin-top: -4px;
+            margin-bottom: 8px;
+        }
+
+        .quiz-panel.open {
+            display: block;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .quiz-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-link {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: var(--bg);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .quiz-link:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .quiz-link::after {
+            content: "Ouvrir →";
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: var(--text-muted);
+        }
+
+        /* BOUTON SUPPRIMER (MASQUÉ AUX ÉLÈVES, VISIBLE UNIQUEMENT EN MODE ADMIN) */
+        .btn-delete {
+            display: none;
+            background: #fef2f2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .admin-mode .btn-delete {
+            display: block; /* S'affiche uniquement en mode admin */
+        }
+
+        .empty-notice {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-style: italic;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        /* ZONE D'EXPORTATION POUR GITHUB PAGES (MASQUÉE PAR DÉFAUT) */
+        .export-section {
+            display: none;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .export-section.active {
+            display: block;
+        }
+
+        .export-section p {
+            font-size: 0.9rem;
+            color: #166534;
+            margin-bottom: 10px;
+        }
+
+        .btn-export {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* PIED DE PAGE */
+        footer {
+            margin-top: 32px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* BOUTON ADMIN TRÈS DISCRET */
+        .btn-admin-trigger {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0.5;
+            padding: 4px 8px;
+        }
+
+        .btn-admin-trigger:hover {
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- EN-TÊTE PUBLIC -->
+    <header>
+        <div class="brand-badge">EduSwatt</div>
+        <h1>Catalogue de Quiz</h1>
+    </header>
+
+    <div class="intro-card">
+        Prépare ton examen ou ton concours en t’entraînant avec nos quiz ! Choisis ton niveau et commence dès maintenant.
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- FORMULAIRE DE GESTION (INVISIBLES AUX ÉLÈVES, ACCESSIBLE VIA LE BOUTON ADMIN) -->
+    <!-- ========================================================================= -->
+    <section class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>➕ Espace d'ajout de Quiz</h2>
+            <button class="btn-close-admin" onclick="lockAdmin()">Fermer 🔒</button>
+        </div>
+        
+        <div class="form-group">
+            <label for="quizCategory">1. Choisis la section :</label>
+            <select id="quizCategory">
+                <option value="cat-bepc-exam">Je prépare mon examen — BEPC</option>
+                <option value="cat-bepc-concours">Je prépare mon concours — BEPC</option>
+                <option value="cat-bac-exam">Je prépare mon bac — BAC</option>
+                <option value="cat-bac-concours">Je prépare mon concours — BAC</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="quizTitle">2. Titre du quiz :</label>
+            <input type="text" id="quizTitle" placeholder="Ex: Mathématiques - Équations">
+        </div>
+
+        <div class="form-group">
+            <label for="quizUrl">3. Colle le lien ou nom du fichier HTML :</label>
+            <input type="text" id="quizUrl" placeholder="Ex: quiz-maths.html OU https://...">
+        </div>
+
+        <button class="btn-add" onclick="addQuizFromForm()">Ajouter ce quiz au catalogue</button>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- CATALOGUE DES QUIZ (LES 4 CATÉGORIES)                                     -->
+    <!-- ========================================================================= -->
+    <main class="categories-container">
+
+        <!-- CATÉGORIE 1 -->
+        <button class="category-button" onclick="toggleCategory('cat-bepc-exam', this)">
+            <span>Je prépare mon examen — BEPC</span>
+            <span class="arrow">▼</span>
+        </button>
+        <div id="cat-bepc-exam" class="quiz-panel">
+            <ul class="quiz-list">
+                <li class="empty-notice">Aucun quiz disponible pour le moment.</li>
+            </ul>
+        </div>
+
+        <!-- CATÉGORIE 2 -->
+        <button class="category-button" onclick="toggleCategory('cat-bepc-concours', this)">
+            <span>Je prépare mon concours — BEPC</span>
+            <span class="arrow">▼</span>
+        </button>
+        <div id="cat-bepc-concours" class="quiz-panel">
+            <ul class="quiz-list">
+                <li class="empty-notice">Aucun quiz disponible pour le moment.</li>
+            </ul>
+        </div>
+
+        <!-- CATÉGORIE 3 -->
+        <button class="category-button" onclick="toggleCategory('cat-bac-exam', this)">
+            <span>Je prépare mon bac — BAC</span>
+            <span class="arrow">▼</span>
+        </button>
+        <div id="cat-bac-exam" class="quiz-panel">
+            <ul class="quiz-list">
+                <li class="empty-notice">Aucun quiz disponible pour le moment.</li>
+            </ul>
+        </div>
+
+        <!-- CATÉGORIE 4 -->
+        <button class="category-button" onclick="toggleCategory('cat-bac-concours', this)">
+            <span>Je prépare mon concours — BAC</span>
+            <span class="arrow">▼</span>
+        </button>
+        <div id="cat-bac-concours" class="quiz-panel">
+            <ul class="quiz-list">
+                <li class="empty-notice">Aucun quiz disponible pour le moment.</li>
+            </ul>
+        </div>
+
+    </main>
+
+
+    <!-- ========================================================================= -->
+    <!-- BOUTON TÉLÉCHARGEMENT POUR GITHUB PAGES (VISIBLE SEULEMENT EN MODE ADMIN)-->
+    <!-- ========================================================================= -->
+    <section class="export-section" id="exportSection">
+        <p>Une fois vos quiz ajoutés, téléchargez le fichier prêt pour GitHub Pages :</p>
+        <button class="btn-export" onclick="downloadCleanIndexHTML()">💾 Télécharger le fichier index.html pour GitHub</button>
+    </section>
+
+    <!-- PIED DE PAGE AVEC LE BOUTON ADMIN CACHÉ -->
+    <footer>
+        <span>&copy; EduSwatt — Tous droits réservés</span>
+        <!-- Bouton discret pour déverrouiller l'espace administration -->
+        <button class="btn-admin-trigger" onclick="unlockAdmin()" title="Accès administration">🔒 Admin</button>
+    </footer>
+
+
+    <!-- ========================================================================= -->
+    <!-- LOGIQUE JAVASCRIPT (GESTION DES CLICS, CODE PIN, AJOUT, EXPORT)           -->
+    <!-- ========================================================================= -->
+    <script>
+        // =========================================================================
+        // 🔑 INDIQUEZ VOTRE CODE SECRET ICI DANS LA VARIABLE CI-DESSOUS :
+        // Vous pouvez mettre n'importe quel code (ex: "1234", "EduSwatt2026", "9876", etc.)
+        // =========================================================================
+        const CODE_SECRET = "1234";
+        // =========================================================================
+
+        // 1. Déverrouiller le panneau d'administration via le code PIN
+        function unlockAdmin() {
+            const codeEntre = prompt("Veuillez entrer votre code secret d'administration :");
+            
+            if (codeEntre === CODE_SECRET) {
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('exportSection').classList.add('active');
+                document.body.classList.add('admin-mode');
+                alert("Mode administration activé !");
+            } else if (codeEntre !== null) {
+                alert("Code secret incorrect.");
+            }
+        }
+
+        // 2. Verrouiller le panneau d'administration
+        function lockAdmin() {
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('exportSection').classList.remove('active');
+            document.body.classList.remove('admin-mode');
+        }
+
+        // 3. Ouvrir / Fermer un accordéon de catégorie
+        function toggleCategory(panelId, buttonElement) {
+            const targetPanel = document.getElementById(panelId);
+            const isOpen = targetPanel.classList.contains('open');
+
+            document.querySelectorAll('.quiz-panel').forEach(panel => panel.classList.remove('open'));
+            document.querySelectorAll('.category-button').forEach(btn => btn.classList.remove('active'));
+
+            if (!isOpen) {
+                targetPanel.classList.add('open');
+                buttonElement.classList.add('active');
+            }
+        }
+
+        // 4. Ajouter un quiz via le formulaire d'administration
+        function addQuizFromForm() {
+            const categoryId = document.getElementById('quizCategory').value;
+            const titleInput = document.getElementById('quizTitle');
+            const urlInput = document.getElementById('quizUrl');
+
+            const title = titleInput.value.trim();
+            const url = urlInput.value.trim();
+
+            if (title === '' || url === '') {
+                alert('Veuillez remplir le titre ET le lien/fichier du quiz.');
+                return;
+            }
+
+            const targetPanel = document.getElementById(categoryId);
+            const quizList = targetPanel.querySelector('.quiz-list');
+            
+            // Retirer l'avis "Aucun quiz" s'il existe
+            const emptyNotice = quizList.querySelector('.empty-notice');
+            if (emptyNotice) {
+                emptyNotice.remove();
+            }
+
+            // Création de la ligne du quiz
+            const newListItem = document.createElement('li');
+            newListItem.className = 'quiz-item';
+            newListItem.innerHTML = `
+                <a href="${url}" class="quiz-link" target="_blank">${title}</a>
+                <button class="btn-delete" onclick="deleteQuiz(this)" title="Supprimer">✕</button>
+            `;
+
+            quizList.appendChild(newListItem);
+
+            // Réinitialiser le formulaire
+            titleInput.value = '';
+            urlInput.value = '';
+
+            // Ouvrir l'accordéon correspondant
+            const parentButton = targetPanel.previousElementSibling;
+            if (!targetPanel.classList.contains('open')) {
+                toggleCategory(categoryId, parentButton);
+            }
+        }
+
+        // 5. Supprimer un quiz
+        function deleteQuiz(buttonElement) {
+            const listItem = buttonElement.closest('.quiz-item');
+            const quizList = listItem.parentElement;
+            
+            listItem.remove();
+
+            if (quizList.children.length === 0) {
+                quizList.innerHTML = '<li class="empty-notice">Aucun quiz disponible pour le moment.</li>';
+            }
+        }
+
+        // 6. Générer et télécharger le fichier index.html prêt pour GitHub Pages (nettoyé)
+        function downloadCleanIndexHTML() {
+            const cloneDocument = document.documentElement.cloneNode(true);
+
+            // Supprimer les éléments d'administration du fichier final
+            const adminPanel = cloneDocument.querySelector('#adminPanel');
+            if (adminPanel) adminPanel.remove();
+
+            const exportSection = cloneDocument.querySelector('#exportSection');
+            if (exportSection) exportSection.remove();
+
+            // Desactiver le mode admin sur le clone
+            cloneDocument.classList.remove('admin-mode');
+
+            // Retirer les boutons "✕" de suppression
+            cloneDocument.querySelectorAll('.btn-delete').forEach(btn => btn.remove());
+
+            const cleanHTMLContent = '<!DOCTYPE html>\n' + cloneDocument.outerHTML;
+
+            const blob = new Blob([cleanHTMLContent], { type: 'text/html;charset=utf-8' });
+            const tempLink = document.createElement('a');
+            tempLink.href = URL.createObjectURL(blob);
+            tempLink.download = 'index.html';
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+        }
+    </script>
+</body>
+</html>
