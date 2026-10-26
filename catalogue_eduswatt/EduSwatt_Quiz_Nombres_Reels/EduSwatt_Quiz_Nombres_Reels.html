@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07152d">
+<!-- Configuration de MathJax pour afficher les formules LaTeX -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  startup: { typeset: false }
+};
+</script>
+<script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" onload="this.dataset.loaded='true'" onerror="this.dataset.failed='true'"></script>
+<title>EduSwatt | Concours de mathématiques – Nombres réels</title>
+<style>
+:root{--navy:#07152d;--blue:#075985;--cyan:#42e8bd;--ink:#17233b;--muted:#64748b;--line:#dbe5f0;--paper:#fff;--bg:#f1f6fb;--accent:#1769ff;--good:#087f5b;--bad:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(125deg,var(--navy),var(--blue));color:#fff;padding:24px 16px} .head{max-width:900px;margin:auto}header h1{margin:0;color:var(--cyan);letter-spacing:.5px;font-size:clamp(1.7rem,5vw,2.4rem)}header p{margin:4px 0 0;color:#e0f2fe}
+main{max-width:900px;margin:22px auto;padding:0 14px 28px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,4vw,28px);box-shadow:0 8px 28px #102a430b}
+h2{line-height:1.3;margin-top:0}.muted{color:var(--muted)}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.chip{border:1px solid #cbdced;background:#f6faff;padding:6px 10px;border-radius:99px;font-size:.88rem}
+button{border:0;border-radius:10px;padding:12px 17px;margin:6px 5px 0 0;background:var(--accent);color:#fff;font-weight:700;font-size:1rem;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#e8eff8;color:#18304e}.danger{background:#9f1239}.progressline{height:8px;background:#e7edf5;border-radius:99px;overflow:hidden;margin:12px 0 18px}.progressfill{height:100%;width:0;background:linear-gradient(90deg,#1769ff,#42e8bd);transition:width .2s}
+.topline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.92rem}.question{font-size:1.16rem;font-weight:700;margin:18px 0}.options{display:grid;gap:10px}.option{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:#fff}.option:has(input:checked){border-color:var(--accent);background:#eff6ff}.option input{margin-top:5px;accent-color:var(--accent);flex-shrink:0}.letter{font-weight:800;color:#1769ff;min-width:22px}.actions{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:20px}.fraction{display:inline-flex;vertical-align:middle;flex-direction:column;text-align:center;line-height:1.1;margin:0 .12em;white-space:nowrap}.fraction .num{border-bottom:1.5px solid currentColor;padding:0 .18em .1em}.fraction .den{padding:.1em .18em 0}.math{font-family:"Cambria Math",Cambria,"Times New Roman",serif;font-size:1.12em}.feedback{padding:14px;border-radius:12px;margin:12px 0;border-left:5px solid}.correct{background:#effcf6;border-color:#0e9f6e}.incorrect{background:#fff4f2;border-color:#e5484d}.resultbig{font-size:2rem;font-weight:800;color:#075985}.reviewq{font-weight:750}.reviewline{margin-top:6px}.badge{display:inline-block;border-radius:99px;padding:3px 9px;font-size:.8rem;font-weight:700}.badge.ok{background:#d1fae5;color:#065f46}.badge.no{background:#fee2e2;color:#991b1b}footer{text-align:center;color:var(--muted);padding:18px;font-size:.9rem} [hidden]{display:none!important}
+@media(max-width:520px){header{padding:20px 15px}.panel{border-radius:14px}.actions button{flex:1}.question{font-size:1.08rem}}
+@media print{header{background:#fff;color:#111;border-bottom:2px solid #111}header h1,header p{color:#111}.no-print,button{display:none!important}body{background:#fff}.panel{box-shadow:none;border:0}main{max-width:none}}
+</style>
+</head>
+<body>
+<header><div class="head"><h1>EduSwatt</h1><p>Concours de mathématiques · Opérations sur les nombres réels</p></div></header>
+<main>
+<section id="start" class="panel">
+<h2>Épreuve de sélection : nombres réels</h2>
+<p>Une série de questions de niveau renforcé pour s’entraîner aux concours. Lisez attentivement les expressions et respectez les priorités opératoires.</p>
+<div class="chips"><span class="chip">30 questions</span><span class="chip">Chronomètre : 35 min</span><span class="chip">Correction détaillée</span><span class="chip">Barres de fractions</span></div>
+<p class="muted">Conseil : prenez une feuille de brouillon. Une réponse peut être enregistrée, puis modifiée avant la fin de l’épreuve.</p>
+<label class="option"><input id="timerToggle" type="checkbox" checked><span>Activer le chronomètre de 35 minutes</span></label>
+<button id="begin">Commencer l’épreuve</button>
+</section>
+<section id="quiz" class="panel" hidden>
+<div class="topline"><span id="progressText">Question 1 sur 30</span><span id="timer">Temps : 35:00</span></div>
+<div class="progressline"><div id="progressFill" class="progressfill"></div></div>
+<form id="form">
+<div id="questionBox"></div>
+<div class="actions no-print"><button type="button" id="prev" class="secondary">Précédent</button><div><button type="button" id="next">Suivant</button><button type="submit" id="finish" class="danger" hidden>Terminer et corriger</button></div></div>
+</form>
+</section>
+<section id="result" class="panel" hidden>
+<h2>Résultats de l’épreuve</h2><div id="score"></div><div id="summary"></div>
+<div class="actions no-print"><button id="retry">Recommencer</button><button id="print" class="secondary">Imprimer la correction</button></div>
+<h2 style="margin-top:28px">Corrigé détaillé</h2><div id="corrections"></div>
+</section>
+</main>
+<footer>EduSwatt · Apprenons, comprenons, réussirons</footer>
+<script>
+const questions = [{"q": "Calculer : \\( -\\frac{7}{12}+\\frac{5}{18} \\).", "o": ["\\(-\\frac{11}{36}\\)", "\\(-\\frac{1}{36}\\)", "\\(\\frac{11}{36}\\)", "\\(-\\frac{1}{6}\\)"], "a": 0, "e": "Le PPCM de 12 et 18 est 36. Ainsi, \\(-\\frac{7}{12}+\\frac{5}{18}=-\\frac{21}{36}+\\frac{10}{36}=-\\frac{11}{36}\\)."}, {"q": "Calculer : \\(\\left(-\\frac{3}{5}\\right)\\div\\left(\\frac{9}{10}\\right)\\).", "o": ["\\(-\\frac{2}{3}\\)", "\\(-\\frac{3}{2}\\)", "\\(\\frac{2}{3}\\)", "\\(-\\frac{27}{50}\\)"], "a": 0, "e": "Diviser par une fraction revient à multiplier par son inverse : \\(-\\frac35\\times\\frac{10}{9}=-\\frac{30}{45}=-\\frac23\\)."}, {"q": "Calculer : \\(\\frac{5}{6}-\\left[\\frac{1}{3}-\\left(-\\frac{3}{4}\\right)\\right]\\).", "o": ["\\(-\\frac{1}{4}\\)", "\\(-\\frac{5}{12}\\)", "\\(\\frac{1}{4}\\)", "\\(-\\frac{7}{12}\\)"], "a": 0, "e": "Dans les crochets : \\(\\frac13+\\frac34=\\frac4{12}+\\frac9{12}=\\frac{13}{12}\\). Puis \\(\\frac56-\\frac{13}{12}=\\frac{10}{12}-\\frac{13}{12}=-\\frac14\\)."}, {"q": "Calculer : \\(\\frac{2}{3}\\times\\left(-\\frac{9}{4}\\right)+\\frac{5}{6}\\).", "o": ["\\(-\\frac{2}{3}\\)", "\\(-\\frac{5}{3}\\)", "\\(-\\frac{1}{2}\\)", "\\(\\frac{1}{3}\\)"], "a": 0, "e": "Le produit vaut \\(-\\frac{18}{12}=-\\frac32\\). Ensuite \\(-\\frac32+\\frac56=-\\frac96+\\frac56=-\\frac46=-\\frac23\\)."}, {"q": "Évaluer : \\(A=\\frac{3-\\frac{1}{2}}{\\frac{5}{4}+\\frac{1}{2}}\\).", "o": ["\\(\\frac{10}{7}\\)", "\\(\\frac{7}{10}\\)", "\\(\\frac{5}{3}\\)", "\\(\\frac{14}{5}\\)"], "a": 0, "e": "Numérateur : \\(3-\\frac12=\\frac52\\). Dénominateur : \\(\\frac54+\\frac12=\\frac74\\). Donc \\(A=\\frac52\\div\\frac74=\\frac52\\times\\frac47=\\frac{10}{7}\\)."}, {"q": "Calculer : \\(\\left(-2\\right)^4-3^2\\times 2\\).", "o": ["\\(-2\\)", "\\(14\\)", "\\(7\\)", "\\(23\\)"], "a": 0, "e": "\\((-2)^4=16\\) et \\(3^2\\times2=9\\times2=18\\). Donc \\(16-18=-2\\)."}, {"q": "Simplifier : \\(\\frac{42}{63}\\times\\frac{9}{14}\\).", "o": ["\\(\\frac{3}{7}\\)", "\\(\\frac{1}{3}\\)", "\\(\\frac{2}{7}\\)", "\\(\\frac{7}{3}\\)"], "a": 0, "e": "On simplifie : \\(\\frac{42}{63}=\\frac23\\). Alors \\(\\frac23\\times\\frac9{14}=\\frac{18}{42}=\\frac37\\)."}, {"q": "Calculer : \\(\\frac{7}{8}\\div\\left(-\\frac{21}{16}\\right)\\).", "o": ["\\(-\\frac{2}{3}\\)", "\\(-\\frac{3}{2}\\)", "\\(\\frac{2}{3}\\)", "\\(-\\frac{7}{6}\\)"], "a": 0, "e": "\\(\\frac78\\times\\left(-\\frac{16}{21}\\right)=-\\frac{112}{168}=-\\frac23\\)."}, {"q": "Quelle expression est égale à \\(\\frac{3}{4}-\\frac{2}{3}\\times\\frac{9}{8}\\) ?", "o": ["\\(0\\)", "\\(\\frac{1}{8}\\)", "\\(-\\frac{1}{8}\\)", "\\(\\frac{3}{8}\\)"], "a": 0, "e": "On effectue d’abord le produit : \\(\\frac23\\times\\frac98=\\frac{18}{24}=\\frac34\\). Donc \\(\\frac34-\\frac34=0\\)."}, {"q": "Calculer : \\(\\left| -\\frac{7}{3}\\right|-\\left|\\frac{5}{2}-4\\right|\\).", "o": ["\\(\\frac{5}{6}\\)", "\\(\\frac{11}{6}\\)", "\\(-\\frac{1}{6}\\)", "\\(\\frac{13}{6}\\)"], "a": 0, "e": "\\(\\left|-\\frac73\\right|=\\frac73\\) et \\(\\left|\\frac52-4\\right|=\\left|-\\frac32\\right|=\\frac32\\). Différence : \\(\\frac{14}{6}-\\frac96=\\frac56\\)."}, {"q": "Calculer : \\(\\frac{1}{2+\\frac{1}{3}}\\).", "o": ["\\(\\frac{3}{7}\\)", "\\(\\frac{7}{3}\\)", "\\(\\frac{2}{7}\\)", "\\(\\frac{3}{5}\\)"], "a": 0, "e": "\\(2+\\frac13=\\frac73\\). Son inverse est \\(\\frac37\\)."}, {"q": "Calculer : \\(\\frac{5}{6}+\\frac{1}{2}\\div\\frac{3}{4}\\).", "o": ["\\(\\frac{3}{2}\\)", "\\(\\frac{7}{6}\\)", "\\(\\frac{4}{3}\\)", "\\(\\frac{11}{12}\\)"], "a": 0, "e": "La division est prioritaire : \\(\\frac12\\div\\frac34=\\frac12\\times\\frac43=\\frac23\\). Puis \\(\\frac56+\\frac23=\\frac56+\\frac46=\\frac96=\\frac32\\)."}, {"q": "On pose \\(x=-\\frac{2}{3}\\). Calculer \\(3x^2-2x\\).", "o": ["\\(\\frac{8}{3}\\)", "\\(\\frac{4}{3}\\)", "\\(0\\)", "\\(-\\frac{8}{3}\\)"], "a": 0, "e": "\\(x^2=\\frac49\\), donc \\(3x^2=\\frac43\\) et \\(-2x=\\frac43\\). La somme vaut \\(\\frac83\\)."}, {"q": "Calculer : \\(\\left(\\frac{3}{5}-\\frac{7}{10}\\right)\\div\\left(-\\frac{1}{4}\\right)\\).", "o": ["\\(\\frac{2}{5}\\)", "\\(-\\frac{2}{5}\\)", "\\(\\frac{1}{5}\\)", "\\(-\\frac{1}{2}\\)"], "a": 0, "e": "\\(\\frac35-\\frac7{10}=\\frac6{10}-\\frac7{10}=-\\frac1{10}\\). Puis \\(-\\frac1{10}\\div(-\\frac14)=-\\frac1{10}\\times(-4)=\\frac25\\)."}, {"q": "Quel est le résultat de \\(\\frac{2^5\\times 2^{-2}}{2^2}\\) ?", "o": ["\\(2\\)", "\\(4\\)", "\\(8\\)", "\\(\\frac12\\)"], "a": 0, "e": "Avec les puissances de même base : \\(2^5\\times2^{-2}=2^3\\), puis \\(\\frac{2^3}{2^2}=2^{3-2}=2\\)."}, {"q": "Calculer : \\(\\sqrt{144}-\\sqrt{49}+\\sqrt{\\frac{1}{16}}\\).", "o": ["\\(\\frac{21}{4}\\)", "\\(\\frac{19}{4}\\)", "\\(\\frac{7}{4}\\)", "\\(6\\)"], "a": 0, "e": "\\(12-7+\\frac14=5+\\frac14=\\frac{21}{4}\\)."}, {"q": "Ranger dans l’ordre croissant : \\(-\\frac{5}{6}, -0,8, -\\frac{3}{4}, -\\frac{7}{9}\\).", "o": ["\\(-\\frac{5}{6}<-\\frac{7}{9}<-0,8<-\\frac{3}{4}\\)", "\\(-0,8<-\\frac{5}{6}<-\\frac{7}{9}<-\\frac{3}{4}\\)", "\\(-\\frac{5}{6}<-0,8<-\\frac{7}{9}<-\\frac{3}{4}\\)", "\\(-\\frac{3}{4}<-\\frac{7}{9}<-0,8<-\\frac{5}{6}\\)"], "a": 2, "e": "Valeurs décimales : \\(-\\frac56\\approx-0,833\\), \\(-0,8\\), \\(-\\frac79\\approx-0,778\\), \\(-\\frac34=-0,75\\). L’ordre croissant est donc \\(-\\frac56<-0,8<-\\frac79<-\\frac34\\)."}, {"q": "Calculer : \\(\\frac{1-\\frac{2}{5}}{1+\\frac{2}{5}}\\).", "o": ["\\(\\frac{3}{7}\\)", "\\(\\frac{7}{3}\\)", "\\(\\frac{2}{5}\\)", "\\(\\frac{1}{7}\\)"], "a": 0, "e": "Numérateur : \\(1-\\frac25=\\frac35\\). Dénominateur : \\(1+\\frac25=\\frac75\\). Le quotient vaut \\(\\frac35\\div\\frac75=\\frac37\\)."}, {"q": "Calculer : \\(\\left(-\\frac{3}{2}\\right)^2-\\left(-\\frac{1}{2}\\right)^3\\).", "o": ["\\(\\frac{19}{8}\\)", "\\(\\frac{17}{8}\\)", "\\(\\frac{5}{4}\\)", "\\(\\frac{7}{8}\\)"], "a": 0, "e": "\\((-\\frac32)^2=\\frac94=\\frac{18}{8}\\). Et \\((-\\frac12)^3=-\\frac18\\). Donc \\(\\frac{18}{8}-(-\\frac18)=\\frac{19}{8}\\)."}, {"q": "Si \\(a=-\\frac{3}{4}\\) et \\(b=\\frac{2}{3}\\), calculer \\(a\\div b+b\\div a\\).", "o": ["\\(-\\frac{145}{72}\\)", "\\(-\\frac{25}{24}\\)", "\\(\\frac{145}{72}\\)", "\\(-\\frac{17}{12}\\)"], "a": 0, "e": "\\(a\\div b=-\\frac34\\times\\frac32=-\\frac98\\). \\(b\\div a=\\frac23\\times(-\\frac43)=-\\frac89\\). Somme : \\(-\\frac98-\\frac89=-\\frac{81}{72}-\\frac{64}{72}=-\\frac{145}{72}\\)."}, {"q": "Calculer : \\(\\frac{3}{7}\\times\\left(\\frac{14}{9}-\\frac{7}{6}\\right)\\).", "o": ["\\(\\frac{1}{6}\\)", "\\(\\frac{1}{14}\\)", "\\(\\frac{1}{3}\\)", "\\(-\\frac{1}{6}\\)"], "a": 0, "e": "Dans la parenthèse : \\(\\frac{14}{9}-\\frac76=\\frac{28}{18}-\\frac{21}{18}=\\frac7{18}\\). Puis \\(\\frac37\\times\\frac7{18}=\\frac16\\)."}, {"q": "Calculer : \\(\\frac{2}{3}-\\left[\\frac{5}{4}-\\left(\\frac{1}{2}-\\frac{7}{6}\\right)\\right]\\).", "o": ["\\(-\\frac54\\)", "\\(-\\frac74\\)", "\\(\\frac7{12}\\)", "\\(-\\frac1{12}\\)"], "a": 0, "e": "\\(\\frac12-\\frac76=\\frac36-\\frac76=-\\frac23\\). Crochets : \\(\\frac54-(-\\frac23)=\\frac54+\\frac23=\\frac{15}{12}+\\frac8{12}=\\frac{23}{12}\\). Enfin \\(\\frac23-\\frac{23}{12}=\\frac8{12}-\\frac{23}{12}=-\\frac{15}{12}=-\\frac54\\)."}, {"q": "Quel nombre est irrationnel ?", "o": ["\\(\\frac{\\sqrt{81}}{9}\\)", "\\(0,\\overline{27}\\)", "\\(\\sqrt{50}\\)", "\\(-\\frac{11}{4}\\)"], "a": 2, "e": "\\(\\sqrt{50}=5\\sqrt2\\) est irrationnel. Les autres expressions sont rationnelles."}, {"q": "Calculer : \\(\\left(\\frac{4}{9}\\right)^{-1}+\\left(-\\frac{1}{3}\\right)^{-2}\\).", "o": ["\\(\\frac{45}{4}\\)", "\\(\\frac{13}{4}\\)", "\\(\\frac{9}{4}\\)", "\\(\\frac{5}{4}\\)"], "a": 0, "e": "\\((\\frac49)^{-1}=\\frac94\\). Et \\((-\\frac13)^{-2}=(-3)^2=9\\). Somme : \\(\\frac94+9=\\frac94+\\frac{36}{4}=\\frac{45}{4}\\)."}, {"q": "Calculer : \\(\\frac{\\frac{3}{4}+\\frac{1}{6}}{\\frac{5}{3}-\\frac{1}{2}}\\).", "o": ["\\(\\frac{11}{14}\\)", "\\(\\frac{14}{11}\\)", "\\(\\frac{7}{11}\\)", "\\(\\frac{11}{7}\\)"], "a": 0, "e": "Numérateur : \\(\\frac34+\\frac16=\\frac9{12}+\\frac2{12}=\\frac{11}{12}\\). Dénominateur : \\(\\frac53-\\frac12=\\frac{10}{6}-\\frac36=\\frac76\\). Quotient : \\(\\frac{11}{12}\\times\\frac67=\\frac{11}{14}\\)."}, {"q": "Calculer : \\(\\frac{5}{2}-\\frac{3}{4}\\left[2-\\frac{8}{3}\\right]\\).", "o": ["\\(3\\)", "\\(\\frac{5}{2}\\)", "\\(\\frac{7}{2}\\)", "\\(2\\)"], "a": 0, "e": "Dans les crochets : \\(2-\\frac83=-\\frac23\\). Alors \\(\\frac34\\times(-\\frac23)=-\\frac12\\). Donc \\(\\frac52-(-\\frac12)=3\\)."}, {"q": "Soit \\(x=\\frac{3}{2}\\). Calculer \\(\\frac{x-1}{x+1}\\).", "o": ["\\(\\frac{1}{5}\\)", "\\(\\frac{1}{3}\\)", "\\(\\frac{3}{5}\\)", "\\(\\frac{5}{3}\\)"], "a": 0, "e": "\\(x-1=\\frac12\\) et \\(x+1=\\frac52\\). Donc \\(\\frac{x-1}{x+1}=\\frac12\\div\\frac52=\\frac15\\)."}, {"q": "Calculer : \\(\\frac{1}{3}\\left[\\frac{9}{2}-\\frac{3}{4}\\right]+\\frac{5}{8}\\).", "o": ["\\(\\frac{15}{8}\\)", "\\(\\frac{7}{8}\\)", "\\(\\frac{5}{4}\\)", "\\(\\frac{9}{8}\\)"], "a": 0, "e": "Crochets : \\(\\frac92-\\frac34=\\frac{18}{4}-\\frac34=\\frac{15}{4}\\). Multiplier par \\(\\frac13\\) donne \\(\\frac54\\). Puis \\(\\frac54+\\frac58=\\frac{10}{8}+\\frac58=\\frac{15}{8}\\)."}, {"q": "Calculer : \\(\\left(\\frac{2}{5}+\\frac{1}{2}\\right)\\times\\left(\\frac{10}{9}\\right)\\).", "o": ["\\(1\\)", "\\(\\frac{9}{10}\\)", "\\(\\frac{5}{9}\\)", "\\(\\frac{10}{9}\\)"], "a": 0, "e": "\\(\\frac25+\\frac12=\\frac4{10}+\\frac5{10}=\\frac9{10}\\). Puis \\(\\frac9{10}\\times\\frac{10}{9}=1\\)."}, {"q": "Calculer : \\(\\frac{3^3-2^4}{5-\\frac{1}{2}}\\).", "o": ["\\(\\frac{22}{9}\\)", "\\(\\frac{2}{3}\\)", "\\(\\frac{1}{9}\\)", "\\(\\frac{3}{2}\\)"], "a": 0, "e": "Numérateur : \\(27-16=11\\). Dénominateur : \\(5-\\frac12=\\frac92\\). Le quotient vaut \\(11\\div\\frac92=\\frac{22}{9}\\)."}];
+const $ = s => document.querySelector(s);
+const start = $('#start'), quiz = $('#quiz'), result = $('#result');
+let index = 0, answers = Array(questions.length).fill(null), remaining = 35*60, timerId = null, timed = true, finished = false;
+// On conserve le LaTeX intact : MathJax se charge de sa mise en forme.
+function mathText(s){return '<span class="math">'+s+'</span>';}
+let mathTypesetQueue = Promise.resolve();
+
+async function waitForMathJax(){
+  if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') return;
+  const script = document.getElementById('MathJax-script');
+  if (!script || script.dataset.loaded === 'true' || script.dataset.failed === 'true') return;
+  await new Promise(resolve => {
+    script.addEventListener('load', resolve, { once: true });
+    script.addEventListener('error', resolve, { once: true });
+  });
+}
+
+function typesetMath(element){
+  if (!element) return Promise.resolve();
+  mathTypesetQueue = mathTypesetQueue.then(async function(){
+    await waitForMathJax();
+    if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise) {
+      await window.MathJax.startup.promise;
+    }
+    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+      await window.MathJax.typesetPromise([element]);
+    } else {
+      console.error('MathJax ne s’est pas chargé. Vérifiez la connexion Internet ou le blocage du CDN.');
+    }
+  }).catch(function(err){
+    console.error('Erreur de rendu mathématique :', err);
+  });
+  return mathTypesetQueue;
+}
+function clearMath(element){
+ if(window.MathJax && window.MathJax.typesetClear && element){
+  window.MathJax.typesetClear([element]);
+ }
+}
+function render(){
+ const q=questions[index];
+ $('#progressText').textContent=`Question ${index+1} sur ${questions.length} · ${answers.filter(v=>v!==null).length} réponse(s)`;
+ $('#progressFill').style.width=((index+1)/questions.length*100)+'%';
+ clearMath($('#questionBox'));
+ $('#questionBox').innerHTML='<div class="question">'+(index+1)+'. '+mathText(q.q)+'</div><div class="options">'+q.o.map((o,i)=>`<label class="option"><input type="radio" name="answer" value="${i}" ${answers[index]===i?'checked':''}><span class="letter">${String.fromCharCode(65+i)}.</span><span>${mathText(o)}</span></label>`).join('')+'</div>';
+ $('#questionBox').querySelectorAll('input').forEach(el=>el.addEventListener('change',()=>answers[index]=Number(el.value)));
+ typesetMath($('#questionBox'));
+ $('#prev').disabled=index===0;
+ $('#next').hidden=index===questions.length-1;
+ $('#finish').hidden=index!==questions.length-1;
+}
+function updateTimer(){
+ const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0');
+ $('#timer').textContent='Temps : '+m+':'+s;
+ if(remaining<=0){clearInterval(timerId);timerId=null;finishQuiz(true);return;}
+ remaining--;
+}
+$('#begin').addEventListener('click',()=>{
+ timed=$('#timerToggle').checked; start.hidden=true; quiz.hidden=false; index=0; render();
+ if(timed){updateTimer();timerId=setInterval(updateTimer,1000);}else $('#timer').textContent='Chronomètre désactivé';
+});
+$('#prev').addEventListener('click',()=>{if(index>0){index--;render();}});
+$('#next').addEventListener('click',()=>{if(index<questions.length-1){index++;render();}});
+$('#form').addEventListener('submit',e=>{e.preventDefault();finishQuiz(false);});
+function finishQuiz(auto){
+ if(finished)return; finished=true; if(timerId){clearInterval(timerId);timerId=null;}
+ let score=0; questions.forEach((q,i)=>{if(answers[i]===q.a)score++;});
+ const pct=Math.round(score/questions.length*100);
+ $('#score').innerHTML='<div class="resultbig">'+score+' / '+questions.length+'</div><p>'+pct+' % de réussite'+(auto?' · Temps écoulé.':'')+'</p>';
+ $('#summary').innerHTML='<p>'+ (score>=24?'Excellent résultat : très bonne maîtrise.':score>=18?'Bon résultat, mais quelques points restent à consolider.':score>=12?'Résultat encourageant : reprenez les corrections avec attention.':'Continuez l’entraînement et révisez les priorités opératoires et les fractions.') +'</p><p class="muted">Réponses justes : '+score+' · Réponses fausses ou non répondues : '+(questions.length-score)+'</p>';
+ clearMath($('#corrections'));
+ $('#corrections').innerHTML=questions.map((q,i)=>{
+  const ok=answers[i]===q.a;
+  return '<div class="feedback '+(ok?'correct':'incorrect')+'"><div class="reviewq">'+(i+1)+'. '+mathText(q.q)+' <span class="badge '+(ok?'ok':'no')+'">'+(ok?'Correct':'À revoir')+'</span></div><div class="reviewline">Votre réponse : <strong>'+(answers[i]===null?'Aucune réponse':mathText(q.o[answers[i]]))+'</strong></div><div class="reviewline">Réponse attendue : <strong>'+mathText(q.o[q.a])+'</strong></div><div class="reviewline">'+mathText(q.e)+'</div></div>';
+ }).join('');
+ quiz.hidden=true; result.hidden=false; typesetMath($('#result')); window.scrollTo({top:0,behavior:'smooth'});
+}
+$('#retry').addEventListener('click',()=>{index=0;answers=Array(questions.length).fill(null);remaining=35*60;finished=false;result.hidden=true;start.hidden=false;window.scrollTo({top:0,behavior:'smooth'});});
+$('#print').addEventListener('click',()=>window.print());
+</script>
+</body></html>
