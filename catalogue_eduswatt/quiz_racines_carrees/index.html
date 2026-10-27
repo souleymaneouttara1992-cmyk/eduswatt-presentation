@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interactif : Les Racines Carrées</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- KaTeX + Chart.js : cdnjs en principal, jsdelivr en secours -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js"></script>
+    <script>if (!window.katex) document.write('<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>');</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min.js"></script>
+    <script>if (!window.renderMathInElement) document.write('<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"><\/script>');</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script>if (!window.Chart) document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>');</script>
+
+    <!-- FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .katex { font-size: 1.15em !important; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- En-tête / Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="app.showScreen('welcome')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-indigo-200">
+                    <span>$\sqrt{x}$</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-900 leading-none">MathQuiz</h1>
+                    <span class="text-xs text-indigo-600 font-medium tracking-wide uppercase">Maîtrise des Racines Carrées</span>
+                </div>
+            </div>
+            
+            <div id="header-stats" class="hidden sm:flex items-center space-x-6 text-sm">
+                <div class="flex items-center space-x-2 text-slate-600">
+                    <i class="fa-regular fa-clock text-indigo-500"></i>
+                    <span id="timer-display" class="font-mono font-semibold">00:00</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-600">
+                    <i class="fa-solid fa-list-check text-indigo-500"></i>
+                    <span id="progress-display" class="font-semibold">0 / 50</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu Principal -->
+    <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+
+        <!-- SCREEN 1: ÉCRAN D'ACCUEIL & SELECTION -->
+        <div id="screen-welcome" class="space-y-8 animate-fade-in">
+            <div class="text-center space-y-4">
+                <span class="px-4 py-1.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 uppercase tracking-wider">
+                    <span data-count="all">50</span> Questions Progressives
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Testez vos compétences sur les Racines Carrées
+                </h2>
+                <p class="max-w-2xl mx-auto text-slate-600 text-base sm:text-lg">
+                    Des bases fondamentales aux simplifications complexes et conjugués. Entraînez-vous avec des corrections détaillées pas à pas.
+                </p>
+            </div>
+
+            <!-- Choix du Mode -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <!-- Mode Complet -->
+                <div onclick="app.startQuiz('all')" class="group relative bg-white p-6 rounded-2xl border-2 border-indigo-500 shadow-xl shadow-indigo-500/5 hover:border-indigo-600 transition-all cursor-pointer flex flex-col justify-between">
+                    <div class="absolute -top-3 right-4 bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                        Recommandé
+                    </div>
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-lg">Parcours Complet</h3>
+                            <p class="text-sm text-slate-500 mt-1">Enchaînez les <span data-count="all">50</span> questions dans un ordre de difficulté croissant.</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500 font-medium">
+                        <span><span data-count="all">50</span> Questions</span>
+                        <span class="text-indigo-600 font-semibold group-hover:translate-x-1 transition-transform">Démarrer &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Mode par Niveau -->
+                <div onclick="app.startQuiz('easy')" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-seedling"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-lg">Niveau Facile</h3>
+                            <p class="text-sm text-slate-500 mt-1"><span data-count="easy">15</span> questions sur les carrés parfaits et calculs élémentaires.</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500 font-medium">
+                        <span><span data-count="easy">15</span> Questions</span>
+                        <span class="text-emerald-600 font-semibold group-hover:translate-x-1 transition-transform">Jouer &rarr;</span>
+                    </div>
+                </div>
+
+                <div onclick="app.startQuiz('medium')" class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-amber-500 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-fire"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-lg">Niveau Moyen</h3>
+                            <p class="text-sm text-slate-500 mt-1"><span data-count="medium">20</span> questions sur la simplification $\sqrt{a^2 b} = a\sqrt{b}$ et additions.</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500 font-medium">
+                        <span><span data-count="medium">20</span> Questions</span>
+                        <span class="text-amber-600 font-semibold group-hover:translate-x-1 transition-transform">Jouer &rarr;</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="app.startQuiz('hard')" class="text-xs text-slate-500 hover:text-rose-600 font-medium underline underline-offset-4">
+                    Ou passer directement au Niveau Complexe (<span data-count="hard">15</span> questions d'équations & conjugués)
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: INTERFACE DU QUIZ -->
+        <div id="screen-quiz" class="hidden space-y-6">
+            <!-- Barre de progression -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                <div class="flex justify-between items-center text-xs font-semibold text-slate-500">
+                    <span id="quiz-difficulty-badge" class="px-2.5 py-0.5 rounded-full uppercase tracking-wider">Facile</span>
+                    <span id="quiz-progress-text">Question 1 / 50</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-indigo-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Carte Question -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <!-- Énoncé -->
+                <div class="p-6 sm:p-8 border-b border-slate-100 bg-slate-50/50">
+                    <span class="text-xs font-semibold text-indigo-600 uppercase tracking-wider block mb-2">Énoncé de la question</span>
+                    <div id="question-text" class="text-xl sm:text-2xl font-bold text-slate-900 min-h-[60px] flex items-center">
+                        <!-- Énoncé rendu ici -->
+                    </div>
+                </div>
+
+                <!-- Options de réponse -->
+                <div class="p-6 sm:p-8 space-y-4">
+                    <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Options générées en JS -->
+                    </div>
+
+                    <!-- Explication après réponse -->
+                    <div id="explanation-box" class="hidden mt-6 p-5 rounded-xl border transition-all">
+                        <div class="flex items-start space-x-3">
+                            <div id="explanation-icon" class="text-xl mt-0.5"></div>
+                            <div class="space-y-2 flex-1">
+                                <h4 id="explanation-title" class="font-bold text-sm uppercase tracking-wider">Explication</h4>
+                                <div id="explanation-text" class="text-slate-700 text-sm leading-relaxed space-y-2">
+                                    <!-- Explication KaTeX -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer de carte / Actions -->
+                <div class="p-4 sm:p-6 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                    <button id="btn-prev" onclick="app.prevQuestion()" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Précédent
+                    </button>
+                    <button id="btn-next" onclick="app.nextQuestion()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm transition-colors shadow-sm shadow-indigo-200">
+                        Suivant <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: TABLEAU DE BORD STATISTIQUES -->
+        <div id="screen-stats" class="hidden space-y-8">
+            <!-- Header du bilan -->
+            <div class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 text-indigo-500/10 text-9xl font-bold select-none math-render">$\sqrt{x}$</div>
+                <div class="relative z-10 space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <span class="px-3 py-1 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 text-xs font-semibold uppercase tracking-wider">
+                                Quiz terminé
+                            </span>
+                            <h2 class="text-3xl font-extrabold text-white mt-2">Résultats & Statistiques</h2>
+                        </div>
+                        <button onclick="app.showScreen('welcome')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-xl backdrop-blur-sm transition-all border border-white/10">
+                            <i class="fa-solid fa-rotate-right mr-2"></i> Recommencer
+                        </button>
+                    </div>
+
+                    <!-- Métriques clés -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-indigo-700/50">
+                        <div class="bg-white/5 p-4 rounded-2xl backdrop-blur-sm border border-white/5">
+                            <span class="text-xs text-indigo-200 font-medium block">Score Global</span>
+                            <span id="stat-score" class="text-3xl font-extrabold text-emerald-400 mt-1 block">0%</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-2xl backdrop-blur-sm border border-white/5">
+                            <span class="text-xs text-indigo-200 font-medium block">Bonnes Réponses</span>
+                            <span id="stat-count" class="text-3xl font-extrabold text-white mt-1 block">0 / 0</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-2xl backdrop-blur-sm border border-white/5">
+                            <span class="text-xs text-indigo-200 font-medium block">Temps Total</span>
+                            <span id="stat-time" class="text-3xl font-extrabold text-white mt-1 block">00:00</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-2xl backdrop-blur-sm border border-white/5">
+                            <span class="text-xs text-indigo-200 font-medium block">Temps Moyen / Ques.</span>
+                            <span id="stat-avg-time" class="text-3xl font-extrabold text-white mt-1 block">0s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphiques & Répartition -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Barres de progression par niveau -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <h3 class="font-bold text-slate-900 text-lg flex items-center">
+                        <i class="fa-solid fa-chart-simple text-indigo-600 mr-2"></i> Performance par Niveau
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <!-- Facile -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-1">
+                                <span class="text-emerald-700">Facile</span>
+                                <span id="stat-easy-text" class="text-slate-600">0/0 (0%)</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                                <div id="stat-easy-bar" class="bg-emerald-500 h-full w-0 transition-all duration-500"></div>
+                            </div>
+                        </div>
+
+                        <!-- Moyen -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-1">
+                                <span class="text-amber-700">Moyen</span>
+                                <span id="stat-medium-text" class="text-slate-600">0/0 (0%)</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                                <div id="stat-medium-bar" class="bg-amber-500 h-full w-0 transition-all duration-500"></div>
+                            </div>
+                        </div>
+
+                        <!-- Complexe -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-1">
+                                <span class="text-rose-700">Complexe</span>
+                                <span id="stat-hard-text" class="text-slate-600">0/0 (0%)</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                                <div id="stat-hard-bar" class="bg-rose-500 h-full w-0 transition-all duration-500"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donut Chart Chart.js -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <h3 class="font-bold text-slate-900 text-lg flex items-center">
+                        <i class="fa-solid fa-chart-pie text-indigo-600 mr-2"></i> Répartition des Réponses
+                    </h3>
+                    <div class="w-full max-w-[220px] mx-auto py-2">
+                        <canvas id="chart-doughnut"></canvas>
+                    </div>
+                    <div class="text-center text-xs text-slate-500">
+                        Précision globale évaluée sur toutes les questions traitées.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Correction détaillée / Synthèse des erreurs -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-4">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-xl">Synthèse et Corrections Étape par Étape</h3>
+                        <p class="text-sm text-slate-500">Revoyez l'ensemble des réponses avec leurs justifications mathématiques.</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="app.filterReview('all')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Toutes</button>
+                        <button onclick="app.filterReview('errors')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100">Erreurs uniquement</button>
+                    </div>
+                </div>
+
+                <!-- Liste dynamique des explications -->
+                <div id="review-list" class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                    <!-- Généré dynamiquement en JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Script Application Logic -->
+    <script>
+        // -------------------------------------------------------------
+        // BANQUE DE 50 QUESTIONS (Facile: 15, Moyen: 20, Complexe: 15)
+        // -------------------------------------------------------------
+        const questionsData = [
+            // --- NIVEAU FACILE (15 questions) ---
+            {
+                id: 1, difficulty: 'easy',
+                question: "Quelle est la valeur de $\\sqrt{49}$ ?",
+                options: ["$6$", "$7$", "$8$", "$14$"],
+                correct: 1,
+                explanation: "Par définition, $\\sqrt{49}$ est le nombre positif dont le carré vaut $49$. Comme $7^2 = 49$, on a $\\sqrt{49} = 7$."
+            },
+            {
+                id: 2, difficulty: 'easy',
+                question: "Calculez $\\sqrt{0}$.",
+                options: ["$0$", "$1$", "Impossible", "$-1$"],
+                correct: 0,
+                explanation: "$0^2 = 0$, donc la racine carrée de zéro est égale à $0$."
+            },
+            {
+                id: 3, difficulty: 'easy',
+                question: "Simplifiez $(\\sqrt{13})^2$.",
+                options: ["$169$", "$\\sqrt{13}$", "$13$", "$26$"],
+                correct: 2,
+                explanation: "Pour tout nombre réel positif $a$, on a la propriété fondamentale $(\\sqrt{a})^2 = a$. Donc $(\\sqrt{13})^2 = 13$."
+            },
+            {
+                id: 4, difficulty: 'easy',
+                question: "Quelle est la valeur de $\\sqrt{121}$ ?",
+                options: ["$11$", "$12$", "$10$", "$21$"],
+                correct: 0,
+                explanation: "$11 \\times 11 = 121$, donc $\\sqrt{121} = 11$."
+            },
+            {
+                id: 5, difficulty: 'easy',
+                question: "Laquelle de ces expressions n'a pas de sens dans les nombres réels $\\mathbb{R}$ ?",
+                options: ["$-\\sqrt{9}$", "$\\sqrt{(-3)^2}$", "$\\sqrt{-16}$", "$\\sqrt{0}$"],
+                correct: 2,
+                explanation: "Dans le corps des nombres réels $\\mathbb{R}$, la racine carrée d'un nombre strictement négatif (comme $-16$) n'est pas définie."
+            },
+            {
+                id: 6, difficulty: 'easy',
+                question: "Calculez $\\sqrt{81} + \\sqrt{16}$.",
+                options: ["$\\sqrt{97}$", "$13$", "$97$", "$25$"],
+                correct: 1,
+                explanation: "$\\sqrt{81} = 9$ et $\\sqrt{16} = 4$. Donc $\\sqrt{81} + \\sqrt{16} = 9 + 4 = 13$."
+            },
+            {
+                id: 7, difficulty: 'easy',
+                question: "Que vaut $\\sqrt{100 \\times 4}$ ?",
+                options: ["$400$", "$40$", "$20$", "$14$"],
+                correct: 2,
+                explanation: "$\\sqrt{100 \\times 4} = \\sqrt{400} = 20$. On peut aussi faire $\\sqrt{100} \\times \\sqrt{4} = 10 \\times 2 = 20$."
+            },
+            {
+                id: 8, difficulty: 'easy',
+                question: "Trouvez $x$ si $\\sqrt{x} = 9$.",
+                options: ["$3$", "$18$", "$81$", "$27$"],
+                correct: 2,
+                explanation: "En élevant les deux membres au carré : $(\\sqrt{x})^2 = 9^2 \\implies x = 81$."
+            },
+            {
+                id: 9, difficulty: 'easy',
+                question: "Calculez $\\sqrt{\\frac{25}{36}}$.",
+                options: ["$\\frac{5}{6}$", "$\\frac{25}{6}$", "$\\frac{5}{36}$", "$\\frac{6}{5}$"],
+                correct: 0,
+                explanation: "Pour $a \\ge 0$ et $b > 0$, $\\sqrt{\\frac{a}{b}} = \\frac{\\sqrt{a}}{\\sqrt{b}}$. Ainsi $\\sqrt{\\frac{25}{36}} = \\frac{\\sqrt{25}}{\\sqrt{36}} = \\frac{5}{6}$."
+            },
+            {
+                id: 10, difficulty: 'easy',
+                question: "Le carré parfait immédiatement supérieur à $64$ est :",
+                options: ["$72$", "$81$", "$100$", "$90$"],
+                correct: 1,
+                explanation: "$64 = 8^2$. Le carré suivant est $9^2 = 81$."
+            },
+            {
+                id: 11, difficulty: 'easy',
+                question: "Vrai ou Faux : $\\sqrt{a + b} = \\sqrt{a} + \\sqrt{b}$ ?",
+                options: ["Toujours Vrai", "Faux en général", "Vrai seulement si $a=b$", "Vrai si $a$ et $b$ sont négatifs"],
+                correct: 1,
+                explanation: "C'est une erreur classique ! La racine carrée n'est PAS distributive par rapport à l'addition. Par exemple $\\sqrt{9+16} = \\sqrt{25} = 5$, alors que $\\sqrt{9}+\\sqrt{16} = 3+4 = 7$."
+            },
+            {
+                id: 12, difficulty: 'easy',
+                question: "Simplifiez $\\sqrt{(-5)^2}$.",
+                options: ["$-5$", "$5$", "$-25$", "$25$"],
+                correct: 1,
+                explanation: "$(-5)^2 = 25$, et $\\sqrt{25} = 5$. De manière générale, $\\sqrt{x^2} = |x|$."
+            },
+            {
+                id: 13, difficulty: 'easy',
+                question: "Quelle est la valeur de $\\sqrt{0{,}04}$ ?",
+                options: ["$0{,}02$", "$0{,}2$", "$0{,}002$", "$2$"],
+                correct: 1,
+                explanation: "Car $(0{,}2)^2 = 0{,}2 \\times 0{,}2 = 0{,}04$."
+            },
+            {
+                id: 14, difficulty: 'easy',
+                question: "Simplifiez $\\sqrt{10^6}$.",
+                options: ["$10^3 = 1000$", "$10^2 = 100$", "$10^4 = 10000$", "$10^5$"],
+                correct: 0,
+                explanation: "$\\sqrt{10^6} = (10^6)^{1/2} = 10^{6/2} = 10^3 = 1000$."
+            },
+            {
+                id: 15, difficulty: 'easy',
+                question: "Calculez $\\sqrt{144} - \\sqrt{64}$.",
+                options: ["$\\sqrt{80}$", "$4$", "$8$", "$12$"],
+                correct: 1,
+                explanation: "$\\sqrt{144} = 12$ et $\\sqrt{64} = 8$. La différence vaut $12 - 8 = 4$."
+            },
+
+            // --- NIVEAU MOYEN (20 questions) ---
+            {
+                id: 16, difficulty: 'medium',
+                question: "Simplifiez sous la forme $a\\sqrt{b}$ le nombre $\\sqrt{12}$.",
+                options: ["$3\\sqrt{2}$", "$2\\sqrt{3}$", "$4\\sqrt{3}$", "$6\\sqrt{2}$"],
+                correct: 1,
+                explanation: "$\\sqrt{12} = \\sqrt{4 \\times 3} = \\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}$."
+            },
+            {
+                id: 17, difficulty: 'medium',
+                question: "Simplifiez $\\sqrt{50}$.",
+                options: ["$5\\sqrt{2}$", "$2\\sqrt{5}$", "$25\\sqrt{2}$", "$5\\sqrt{10}$"],
+                correct: 0,
+                explanation: "$\\sqrt{50} = \\sqrt{25 \\times 2} = \\sqrt{25} \\times \\sqrt{2} = 5\\sqrt{2}$."
+            },
+            {
+                id: 18, difficulty: 'medium',
+                question: "Calculez $3\\sqrt{5} + 7\\sqrt{5} - 2\\sqrt{5}$.",
+                options: ["$8\\sqrt{5}$", "$8\\sqrt{15}$", "$12\\sqrt{5}$", "$10\\sqrt{5}$"],
+                correct: 0,
+                explanation: "On met $\\sqrt{5}$ en facteur commun : $(3 + 7 - 2)\\sqrt{5} = 8\\sqrt{5}$."
+            },
+            {
+                id: 19, difficulty: 'medium',
+                question: "Effectuez le produit $\\sqrt{6} \\times \\sqrt{15}$.",
+                options: ["$\\sqrt{21}$", "$3\\sqrt{10}$", "$9\\sqrt{10}$", "$5\\sqrt{6}$"],
+                correct: 1,
+                explanation: "$\\sqrt{6} \\times \\sqrt{15} = \\sqrt{6 \\times 15} = \\sqrt{90} = \\sqrt{9 \\times 10} = 3\\sqrt{10}$."
+            },
+            {
+                id: 20, difficulty: 'medium',
+                question: "Simplifiez $\\sqrt{72}$.",
+                options: ["$6\\sqrt{2}$", "$3\\sqrt{8}$", "$2\\sqrt{18}$", "$8\\sqrt{3}$"],
+                correct: 0,
+                explanation: "$\\sqrt{72} = \\sqrt{36 \\times 2} = 6\\sqrt{2}$ (forme la plus simplifiée possible)."
+            },
+            {
+                id: 21, difficulty: 'medium',
+                question: "Rendre rationnel le dénominateur de $\\frac{5}{\\sqrt{3}}$.",
+                options: ["$\\frac{5\\sqrt{3}}{3}$", "$\\frac{\\sqrt{15}}{3}$", "$5\\sqrt{3}$", "$\\frac{15}{\\sqrt{3}}$"],
+                correct: 0,
+                explanation: "On multiplie le numérateur et le dénominateur par $\\sqrt{3}$ : $\\frac{5 \\times \\sqrt{3}}{\\sqrt{3} \\times \\sqrt{3}} = \\frac{5\\sqrt{3}}{3}$."
+            },
+            {
+                id: 22, difficulty: 'medium',
+                question: "Calculez $\\sqrt{27} + \\sqrt{48}$.",
+                options: ["$\\sqrt{75}$", "$7\\sqrt{3}$", "$12\\sqrt{3}$", "$5\\sqrt{3}$"],
+                correct: 1,
+                explanation: "$\\sqrt{27} = \\sqrt{9 \\times 3} = 3\\sqrt{3}$ et $\\sqrt{48} = \\sqrt{16 \\times 3} = 4\\sqrt{3}$. Leur somme donne $3\\sqrt{3} + 4\\sqrt{3} = 7\\sqrt{3}$."
+            },
+            {
+                id: 23, difficulty: 'medium',
+                question: "Développez et simplifiez $\\sqrt{2}(3 + \\sqrt{2})$.",
+                options: ["$3\\sqrt{2} + 2$", "$3\\sqrt{2} + 4$", "$5\\sqrt{2}$", "$6$"],
+                correct: 0,
+                explanation: "$\\sqrt{2} \\times 3 + \\sqrt{2} \\times \\sqrt{2} = 3\\sqrt{2} + 2$."
+            },
+            {
+                id: 24, difficulty: 'medium',
+                question: "Simplifiez l'expression $\\sqrt{a^3}$ pour $a \\ge 0$.",
+                options: ["$a\\sqrt{a}$", "$a^2$", "$\\sqrt{a}$", "$a^{2/3}$"],
+                correct: 0,
+                explanation: "$\\sqrt{a^3} = \\sqrt{a^2 \\times a} = \\sqrt{a^2} \\times \\sqrt{a} = a\\sqrt{a}$."
+            },
+            {
+                id: 25, difficulty: 'medium',
+                question: "Résolvez l'équation $x^2 = 25$.",
+                options: ["$x = 5$", "$x = -5$", "$x = 5$ ou $x = -5$", "$x = 625$"],
+                correct: 2,
+                explanation: "L'équation $x^2 = a$ avec $a > 0$ possède deux solutions réelles : $x = \\sqrt{a}$ et $x = -\\sqrt{a}$. Ici $x = 5$ ou $x = -5$."
+            },
+            {
+                id: 26, difficulty: 'medium',
+                question: "Résolvez l'équation $x^2 = -9$.",
+                options: ["$x = -3$", "$x = 3$", "Aucune solution réelle", "$x = -81$"],
+                correct: 2,
+                explanation: "Un carré dans $\\mathbb{R}$ ne peut jamais être strictement négatif. Il n'y a donc aucune solution réelle."
+            },
+            {
+                id: 27, difficulty: 'medium',
+                question: "Simplifiez $\\sqrt{200} - \\sqrt{18}$.",
+                options: ["$7\\sqrt{2}$", "$13\\sqrt{2}$", "$\\sqrt{182}$", "$8\\sqrt{2}$"],
+                correct: 0,
+                explanation: "$\\sqrt{200} = 10\\sqrt{2}$ et $\\sqrt{18} = 3\\sqrt{2}$. La différence est $10\\sqrt{2} - 3\\sqrt{2} = 7\\sqrt{2}$."
+            },
+            {
+                id: 28, difficulty: 'medium',
+                question: "Calculez $(2\\sqrt{3})^2$.",
+                options: ["$6$", "$12$", "$36$", "$18$"],
+                correct: 1,
+                explanation: "$(2\\sqrt{3})^2 = 2^2 \\times (\\sqrt{3})^2 = 4 \\times 3 = 12$."
+            },
+            {
+                id: 29, difficulty: 'medium',
+                question: "Que vaut le quotient $\\frac{\\sqrt{80}}{\\sqrt{5}}$ ?",
+                options: ["$4$", "$16$", "$4\\sqrt{5}$", "$8$"],
+                correct: 0,
+                explanation: "$\\frac{\\sqrt{80}}{\\sqrt{5}} = \\sqrt{\\frac{80}{5}} = \\sqrt{16} = 4$."
+            },
+            {
+                id: 30, difficulty: 'medium',
+                question: "Simplifiez $\\sqrt{45} - 2\\sqrt{5} + \\sqrt{20}$.",
+                options: ["$3\\sqrt{5}$", "$4\\sqrt{5}$", "$5\\sqrt{5}$", "$\\sqrt{5}$"],
+                correct: 0,
+                explanation: "$\\sqrt{45} = 3\\sqrt{5}$ et $\\sqrt{20} = 2\\sqrt{5}$. On a $3\\sqrt{5} - 2\\sqrt{5} + 2\\sqrt{5} = 3\\sqrt{5}$."
+            },
+            {
+                id: 31, difficulty: 'medium',
+                question: "Calculez l'aire d'un carré de côté $3\\sqrt{2}\\text{ cm}$.",
+                options: ["$18\\text{ cm}^2$", "$6\\sqrt{2}\\text{ cm}^2$", "$12\\text{ cm}^2$", "$36\\text{ cm}^2$"],
+                correct: 0,
+                explanation: "$\\text{Aire} = \\text{côté}^2 = (3\\sqrt{2})^2 = 9 \\times 2 = 18\\text{ cm}^2$."
+            },
+            {
+                id: 32, difficulty: 'medium',
+                question: "Trouvez l'hypoténuse d'un triangle rectangle dont les côtés de l'angle droit mesurent $4$ et $7$.",
+                options: ["$\\sqrt{65}$", "$11$", "$\\sqrt{33}$", "$65$"],
+                correct: 0,
+                explanation: "D'après Pythagore : $h^2 = 4^2 + 7^2 = 16 + 49 = 65 \\implies h = \\sqrt{65}$."
+            },
+            {
+                id: 33, difficulty: 'medium',
+                question: "Rendre rationnel : $\\frac{6}{\\sqrt{2}}$.",
+                options: ["$3\\sqrt{2}$", "$6\\sqrt{2}$", "$3$", "$2\\sqrt{3}$"],
+                correct: 0,
+                explanation: "$\\frac{6}{\\sqrt{2}} = \\frac{6\\sqrt{2}}{2} = 3\\sqrt{2}$."
+            },
+            {
+                id: 34, difficulty: 'medium',
+                question: "Simplifiez $\\sqrt{32} \\times \\sqrt{2}$.",
+                options: ["$8$", "$16$", "$64$", "$4\\sqrt{2}$"],
+                correct: 0,
+                explanation: "$\\sqrt{32 \\times 2} = \\sqrt{64} = 8$."
+            },
+            {
+                id: 35, difficulty: 'medium',
+                question: "Quel est le résultat de $(5 - \\sqrt{3})(5 + \\sqrt{3})$ ?",
+                options: ["$22$", "$28$", "$25$", "$16$"],
+                correct: 0,
+                explanation: "Identité remarquable $(a-b)(a+b) = a^2 - b^2$. Donc $5^2 - (\\sqrt{3})^2 = 25 - 3 = 22$."
+            },
+
+            // --- NIVEAU COMPLEXE (15 questions) ---
+            {
+                id: 36, difficulty: 'hard',
+                question: "Développez et simplifiez $(\\sqrt{5} + \\sqrt{2})^2$.",
+                options: ["$7 + 2\\sqrt{10}$", "$7$", "$10 + 2\\sqrt{10}$", "$3 + 2\\sqrt{10}$"],
+                correct: 0,
+                explanation: "$(a+b)^2 = a^2 + 2ab + b^2$. Donc $(\\sqrt{5})^2 + 2\\sqrt{5}\\sqrt{2} + (\\sqrt{2})^2 = 5 + 2\\sqrt{10} + 2 = 7 + 2\\sqrt{10}$."
+            },
+            {
+                id: 37, difficulty: 'hard',
+                question: "Rendre le dénominateur rationnel pour $\\frac{4}{\\sqrt{5} - 1}$.",
+                options: ["$\\sqrt{5} + 1$", "$4(\\sqrt{5}+1)$", "$\\frac{\\sqrt{5}+1}{4}$", "$2\\sqrt{5} + 2$"],
+                correct: 0,
+                explanation: "On multiplie par l'expression conjuguée $(\\sqrt{5} + 1)$ : $\\frac{4(\\sqrt{5}+1)}{(\\sqrt{5}-1)(\\sqrt{5}+1)} = \\frac{4(\\sqrt{5}+1)}{5 - 1} = \\frac{4(\\sqrt{5}+1)}{4} = \\sqrt{5} + 1$."
+            },
+            {
+                id: 38, difficulty: 'hard',
+                question: "Simplifiez l'expression $\\sqrt{28} - 3\\sqrt{63} + 2\\sqrt{112}$.",
+                options: ["$\\sqrt{7}$", "$0$", "$2\\sqrt{7}$", "$-3\\sqrt{7}$"],
+                correct: 0,
+                explanation: "On décompose en fonction de $\\sqrt{7}$ : $\\sqrt{28} = 2\\sqrt{7}$, $3\\sqrt{63} = 3(3\\sqrt{7}) = 9\\sqrt{7}$, $2\\sqrt{112} = 2(4\\sqrt{7}) = 8\\sqrt{7}$. D'où $2\\sqrt{7} - 9\\sqrt{7} + 8\\sqrt{7} = 1\\sqrt{7} = \\sqrt{7}$."
+            },
+            {
+                id: 39, difficulty: 'hard',
+                question: "Développez $(3\\sqrt{2} - 2\\sqrt{3})^2$.",
+                options: ["$30 - 12\\sqrt{6}$", "$6 - 12\\sqrt{6}$", "$30$", "$18 - 12\\sqrt{6}$"],
+                correct: 0,
+                explanation: "$(3\\sqrt{2})^2 - 2(3\\sqrt{2})(2\\sqrt{3}) + (2\\sqrt{3})^2 = 18 - 12\\sqrt{6} + 12 = 30 - 12\\sqrt{6}$."
+            },
+            {
+                id: 40, difficulty: 'hard',
+                question: "Simplifiez le nombre $A = \\sqrt{7 - 4\\sqrt{3}}$.",
+                options: ["$2 - \\sqrt{3}$", "$\\sqrt{3} - 2$", "$4 - \\sqrt{3}$", "$1 - 2\\sqrt{3}$"],
+                correct: 0,
+                explanation: "Remarquons que $(2 - \\sqrt{3})^2 = 4 - 4\\sqrt{3} + 3 = 7 - 4\\sqrt{3}$. Comme $2 > \\sqrt{3}$, $\\sqrt{(2-\\sqrt{3})^2} = 2 - \\sqrt{3}$."
+            },
+            {
+                id: 41, difficulty: 'hard',
+                question: "Résolvez l'équation $(2x - 1)^2 = 12$.",
+                options: ["$x = \\frac{1 \\pm 2\\sqrt{3}}{2}$", "$x = \\frac{1 + \\sqrt{12}}{2}$", "$x = \\pm \\sqrt{3}$", "$x = 1 \\pm \\sqrt{3}$"],
+                correct: 0,
+                explanation: "$2x - 1 = \\sqrt{12} = 2\\sqrt{3}$ ou $2x - 1 = -2\\sqrt{3}$. Ainsi $2x = 1 \\pm 2\\sqrt{3} \\implies x = \\frac{1 \\pm 2\\sqrt{3}}{2}$."
+            },
+            {
+                id: 42, difficulty: 'hard',
+                question: "Calculez et simplifiez $\\frac{\\sqrt{3} + 1}{\\sqrt{3} - 1}$.",
+                options: ["$2 + \\sqrt{3}$", "$2 - \\sqrt{3}$", "$4 + 2\\sqrt{3}$", "$1 + \\sqrt{3}$"],
+                correct: 0,
+                explanation: "On multiplie numérateur et dénominateur par $(\\sqrt{3}+1)$ : $\\frac{(\\sqrt{3}+1)^2}{3 - 1} = \\frac{3 + 2\\sqrt{3} + 1}{2} = \\frac{4 + 2\\sqrt{3}}{2} = 2 + \\sqrt{3}$."
+            },
+            {
+                id: 43, difficulty: 'hard',
+                question: "Simplifiez la fraction $\\frac{\\sqrt{18} + \\sqrt{8}}{\\sqrt{32}}$.",
+                options: ["$\\frac{5}{4}$", "$\\frac{5}{2}$", "$\\frac{\\sqrt{26}}{4}$", "$1$"],
+                correct: 0,
+                explanation: "$\\sqrt{18} = 3\\sqrt{2}$, $\\sqrt{8} = 2\\sqrt{2}$, $\\sqrt{32} = 4\\sqrt{2}$. Le quotient donne $\\frac{3\\sqrt{2} + 2\\sqrt{2}}{4\\sqrt{2}} = \\frac{5\\sqrt{2}}{4\\sqrt{2}} = \\frac{5}{4}$."
+            },
+            {
+                id: 44, difficulty: 'hard',
+                question: "Résolvez dans $\\mathbb{R}$ l'inéquation $\\sqrt{x + 3} \\le 4$.",
+                options: ["$[-3 ; 13]$", "$]-\\infty ; 13]$", "$[0 ; 13]$", "$[-3 ; 16]$"],
+                correct: 0,
+                explanation: "1) Condition d'existence : $x + 3 \\ge 0 \\implies x \\ge -3$.\n2) En élevant au carré : $x + 3 \\le 16 \\implies x \\le 13$.\nL'ensemble solution est donc $x \\in [-3 ; 13]$."
+            },
+            {
+                id: 45, difficulty: 'hard',
+                question: "Que vaut le produit $(1 + \\sqrt{2} + \\sqrt{3})(1 + \\sqrt{2} - \\sqrt{3})$ ?",
+                options: ["$2\\sqrt{2}$", "$2$", "$4\\sqrt{2}$", "$2 + 2\\sqrt{2}$"],
+                correct: 0,
+                explanation: "On regroupe sous la forme $(a+b)(a-b)$ avec $a = 1+\\sqrt{2}$ et $b = \\sqrt{3}$. Le produit vaut $(1+\\sqrt{2})^2 - 3 = (1 + 2\\sqrt{2} + 2) - 3 = 3 + 2\\sqrt{2} - 3 = 2\\sqrt{2}$."
+            },
+            {
+                id: 46, difficulty: 'hard',
+                question: "Simplifiez $\\sqrt{\\frac{3}{2}} + \\sqrt{\\frac{2}{3}}$.",
+                options: ["$\\frac{5\\sqrt{6}}{6}$", "$\\frac{\\sqrt{6}}{6}$", "$\\sqrt{\\frac{5}{6}}$", "$\\frac{5}{6}$"],
+                correct: 0,
+                explanation: "$\\sqrt{\\frac{3}{2}} = \\frac{\\sqrt{6}}{2}$ et $\\sqrt{\\frac{2}{3}} = \\frac{\\sqrt{6}}{3}$. La somme est $\\frac{3\\sqrt{6} + 2\\sqrt{6}}{6} = \\frac{5\\sqrt{6}}{6}$."
+            },
+            {
+                id: 47, difficulty: 'hard',
+                question: "Si $x = \\sqrt{5} - 2$, quelle est la valeur de $x + \\frac{1}{x}$ ?",
+                options: ["$2\\sqrt{5}$", "$4$", "$\\sqrt{5}$", "$2$"],
+                correct: 0,
+                explanation: "$\\frac{1}{x} = \\frac{1}{\\sqrt{5}-2} = \\frac{\\sqrt{5}+2}{5-4} = \\sqrt{5}+2$. Donc $x + \\frac{1}{x} = (\\sqrt{5}-2) + (\\sqrt{5}+2) = 2\\sqrt{5}$."
+            },
+            {
+                id: 48, difficulty: 'hard',
+                question: "Trouvez la valeur de $\\sqrt{20} \\times \\sqrt{45} - \\sqrt{1600}$.",
+                options: ["$-10$", "$0$", "$10$", "$30$"],
+                correct: 0,
+                explanation: "$\\sqrt{20 \\times 45} = \\sqrt{900} = 30$. D'autre part, $\\sqrt{1600} = 40$. D'où $30 - 40 = -10$."
+            },
+            {
+                id: 49, difficulty: 'hard',
+                question: "Trouvez le domaine de définition de $f(x) = \\sqrt{x^2 - 9}$.",
+                options: ["$]-\\infty ; -3] \\cup [3 ; +\\infty[$", "$[-3 ; 3]$", "$[3 ; +\\infty[$", "$\\mathbb{R}$"],
+                correct: 0,
+                explanation: "Il faut que $x^2 - 9 \\ge 0 \\implies (x-3)(x+3) \\ge 0$. Les solutions du tableau de signes sont $x \\le -3$ ou $x \\ge 3$."
+            },
+            {
+                id: 50, difficulty: 'hard',
+                question: "Simplifiez l'expression $\\sqrt{2 + \\sqrt{3}} \\times \\sqrt{2 - \\sqrt{3}}$.",
+                options: ["$1$", "$2$", "$\\sqrt{3}$", "$\\sqrt{7}$"],
+                correct: 0,
+                explanation: "$\\sqrt{(2+\\sqrt{3})(2-\\sqrt{3})} = \\sqrt{2^2 - (\\sqrt{3})^2} = \\sqrt{4 - 3} = \\sqrt{1} = 1$."
+            },
+
+            // --- QUESTIONS SUPPLÉMENTAIRES (5 par niveau) ---
+            { id: 51, difficulty: 'easy', question: "Quelle est la valeur de $\\sqrt{169}$ ?", options: ["$13$", "$14$", "$12$", "$16$"], correct: 0,
+              explanation: "$13 \\times 13 = 169$, donc $\\sqrt{169} = 13$." },
+            { id: 52, difficulty: 'easy', question: "Calculez $\\sqrt{\\frac{16}{81}}$.", options: ["$\\frac{16}{9}$", "$\\frac{4}{9}$", "$\\frac{4}{81}$", "$\\frac{8}{9}$"], correct: 1,
+              explanation: "$\\sqrt{\\frac{16}{81}} = \\frac{\\sqrt{16}}{\\sqrt{81}} = \\frac{4}{9}$." },
+            { id: 53, difficulty: 'easy', question: "Calculez $\\sqrt{9} \\times \\sqrt{25}$.", options: ["$8$", "$34$", "$15$", "$225$"], correct: 2,
+              explanation: "$\\sqrt{9} = 3$ et $\\sqrt{25} = 5$, donc le produit vaut $3 \\times 5 = 15$." },
+            { id: 54, difficulty: 'easy', question: "Entre quels entiers consécutifs se situe $\\sqrt{40}$ ?", options: ["$5$ et $6$", "$6$ et $7$", "$7$ et $8$", "$4$ et $5$"], correct: 1,
+              explanation: "$36 < 40 < 49$, donc $6 < \\sqrt{40} < 7$." },
+            { id: 55, difficulty: 'easy', question: "Quelle est la valeur de $\\sqrt{1{,}44}$ ?", options: ["$1{,}2$", "$0{,}12$", "$12$", "$1{,}22$"], correct: 0,
+              explanation: "$(1{,}2)^2 = 1{,}44$, donc $\\sqrt{1{,}44} = 1{,}2$." },
+            { id: 56, difficulty: 'medium', question: "Simplifiez $\\sqrt{98}$.", options: ["$2\\sqrt{7}$", "$7\\sqrt{2}$", "$49\\sqrt{2}$", "$14\\sqrt{7}$"], correct: 1,
+              explanation: "$\\sqrt{98} = \\sqrt{49 \\times 2} = 7\\sqrt{2}$." },
+            { id: 57, difficulty: 'medium', question: "Rendre rationnel le dénominateur de $\\frac{10}{\\sqrt{5}}$.", options: ["$2\\sqrt{5}$", "$10\\sqrt{5}$", "$5\\sqrt{2}$", "$2$"], correct: 0,
+              explanation: "$\\frac{10}{\\sqrt{5}} = \\frac{10\\sqrt{5}}{5} = 2\\sqrt{5}$." },
+            { id: 58, difficulty: 'medium', question: "Développez $(2 + \\sqrt{3})^2$.", options: ["$7$", "$7 + 4\\sqrt{3}$", "$5 + 4\\sqrt{3}$", "$4 + 2\\sqrt{3}$"], correct: 1,
+              explanation: "$(a+b)^2 = a^2 + 2ab + b^2$ : $4 + 4\\sqrt{3} + 3 = 7 + 4\\sqrt{3}$." },
+            { id: 59, difficulty: 'medium', question: "Résolvez l'équation $x^2 = 20$.", options: ["$x = 2\\sqrt{5}$ seulement", "$x = \\pm 2\\sqrt{5}$", "$x = \\pm 10$", "$x = \\pm 4\\sqrt{5}$"], correct: 1,
+              explanation: "$x = \\pm\\sqrt{20} = \\pm 2\\sqrt{5}$ : il y a deux solutions opposées." },
+            { id: 60, difficulty: 'medium', question: "Quel est le périmètre d'un rectangle de dimensions $\\sqrt{18}$ et $\\sqrt{8}$ ?", options: ["$10\\sqrt{2}$", "$5\\sqrt{2}$", "$\\sqrt{52}$", "$26$"], correct: 0,
+              explanation: "$\\sqrt{18} = 3\\sqrt{2}$ et $\\sqrt{8} = 2\\sqrt{2}$. Périmètre : $2(3\\sqrt{2} + 2\\sqrt{2}) = 10\\sqrt{2}$." },
+            { id: 61, difficulty: 'hard', question: "Simplifiez $\\frac{1}{\\sqrt{2}+1} + \\frac{1}{\\sqrt{2}-1}$.", options: ["$2\\sqrt{2}$", "$2$", "$\\sqrt{2}$", "$2\\sqrt{2} - 2$"], correct: 0,
+              explanation: "Avec les conjugués : $\\frac{1}{\\sqrt{2}+1} = \\sqrt{2}-1$ et $\\frac{1}{\\sqrt{2}-1} = \\sqrt{2}+1$. La somme vaut $2\\sqrt{2}$." },
+            { id: 62, difficulty: 'hard', question: "Simplifiez $\\sqrt{11 + 6\\sqrt{2}}$.", options: ["$3 - \\sqrt{2}$", "$3 + \\sqrt{2}$", "$\\sqrt{11} + \\sqrt{6}$", "$2 + 3\\sqrt{2}$"], correct: 1,
+              explanation: "$(3 + \\sqrt{2})^2 = 9 + 6\\sqrt{2} + 2 = 11 + 6\\sqrt{2}$, et $3 + \\sqrt{2} > 0$." },
+            { id: 63, difficulty: 'hard', question: "Résolvez dans $\\mathbb{R}$ l'équation $\\sqrt{2x + 1} = x - 1$.", options: ["$x = 0$ ou $x = 4$", "$x = 4$", "$x = 0$", "$x = -1$"], correct: 1,
+              explanation: "On élève au carré : $2x + 1 = x^2 - 2x + 1 \\implies x(x - 4) = 0$. Vérification : pour $x = 0$, $\\sqrt{1} = 1 \\neq -1$ (rejetée) ; pour $x = 4$, $\\sqrt{9} = 3 = 4 - 1$ (valide)." },
+            { id: 64, difficulty: 'hard', question: "Domaine de définition de $f(x) = \\frac{\\sqrt{2x - 6}}{x - 5}$ ?", options: ["$[3 ; +\\infty[ \\setminus \\{5\\}$", "$[3 ; +\\infty[$", "$]-\\infty ; 3]$", "$\\mathbb{R} \\setminus \\{5\\}$"], correct: 0,
+              explanation: "Il faut $2x - 6 \\ge 0 \\implies x \\ge 3$ et $x - 5 \\neq 0 \\implies x \\neq 5$." },
+            { id: 65, difficulty: 'hard', question: "Calculez $\\sqrt{4 + 2\\sqrt{3}} - \\sqrt{4 - 2\\sqrt{3}}$.", options: ["$2\\sqrt{3}$", "$2$", "$0$", "$1$"], correct: 1,
+              explanation: "$(\\sqrt{3}+1)^2 = 4 + 2\\sqrt{3}$ et $(\\sqrt{3}-1)^2 = 4 - 2\\sqrt{3}$, avec $\\sqrt{3} - 1 > 0$. La différence vaut $(\\sqrt{3}+1) - (\\sqrt{3}-1) = 2$." }
+        ];
+
+        // -------------------------------------------------------------
+        // ETAT DE L'APPLICATION
+        // -------------------------------------------------------------
+        class QuizApp {
+            constructor() {
+                this.activeQuestions = [];
+                this.currentIndex = 0;
+                this.userAnswers = []; // { selected: number|null, timeSpent: number }
+                this.timerInterval = null;
+                this.totalSeconds = 0;
+                this.questionStartTime = 0;
+                this.chartInstance = null;
+            }
+
+            // Fonction de rendu KaTeX fiable & instatané
+            renderMath() {
+                if (!window.renderMathInElement) {
+                    if (!document.getElementById('katex-warning')) {
+                        const w = document.createElement('div');
+                        w.id = 'katex-warning';
+                        w.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-rose-600 text-white text-sm px-4 py-2 rounded-xl shadow-lg';
+                        w.textContent = "Le moteur d'affichage des formules (KaTeX) n'a pas pu être chargé. Vérifiez votre connexion internet.";
+                        document.body.appendChild(w);
+                    }
+                    return;
+                }
+                {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\(', right: '\\)', display: false},
+                            {left: '\\[', right: '\\]', display: true}
+                        ],
+                        throwOnError: false,
+                        strict: false
+                    });
+                }
+            }
+
+            // Changer d'écran
+            showScreen(screenId) {
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-quiz').classList.add('hidden');
+                document.getElementById('screen-stats').classList.add('hidden');
+                document.getElementById('header-stats').classList.add('hidden');
+
+                const target = document.getElementById(`screen-${screenId}`);
+                target.classList.remove('hidden');
+
+                if (screenId === 'quiz') {
+                    document.getElementById('header-stats').classList.remove('hidden');
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                this.renderMath();
+            }
+
+            // Démarrer une session de Quiz
+            startQuiz(filterMode) {
+                if (filterMode === 'all') {
+                    const rank = { easy: 0, medium: 1, hard: 2 };
+                    this.activeQuestions = [...questionsData].sort((a, b) => rank[a.difficulty] - rank[b.difficulty]);
+                } else {
+                    this.activeQuestions = questionsData.filter(q => q.difficulty === filterMode);
+                }
+
+                this.currentIndex = 0;
+                this.userAnswers = new Array(this.activeQuestions.length).fill(null).map(() => ({
+                    selected: null,
+                    timeSpent: 0
+                }));
+
+                // Reset timer
+                this.totalSeconds = 0;
+                clearInterval(this.timerInterval);
+                this.timerInterval = setInterval(() => {
+                    this.totalSeconds++;
+                    document.getElementById('timer-display').textContent = this.formatTime(this.totalSeconds);
+                }, 1000);
+
+                this.showScreen('quiz');
+                this.loadQuestion();
+            }
+
+            // Charger la question courante
+            loadQuestion() {
+                this.questionStartTime = Date.now();
+                const q = this.activeQuestions[this.currentIndex];
+
+                // Mise à jour de la barre de progression
+                const progressPct = ((this.currentIndex + 1) / this.activeQuestions.length) * 100;
+                document.getElementById('quiz-progress-bar').style.width = `${progressPct}%`;
+                document.getElementById('quiz-progress-text').textContent = `Question ${this.currentIndex + 1} / ${this.activeQuestions.length}`;
+                document.getElementById('progress-display').textContent = `${this.currentIndex + 1} / ${this.activeQuestions.length}`;
+
+                // Badge de difficulté
+                const badge = document.getElementById('quiz-difficulty-badge');
+                if (q.difficulty === 'easy') {
+                    badge.textContent = 'Facile';
+                    badge.className = 'px-2.5 py-0.5 rounded-full uppercase tracking-wider text-xs font-semibold bg-emerald-100 text-emerald-800';
+                } else if (q.difficulty === 'medium') {
+                    badge.textContent = 'Moyen';
+                    badge.className = 'px-2.5 py-0.5 rounded-full uppercase tracking-wider text-xs font-semibold bg-amber-100 text-amber-800';
+                } else {
+                    badge.textContent = 'Complexe';
+                    badge.className = 'px-2.5 py-0.5 rounded-full uppercase tracking-wider text-xs font-semibold bg-rose-100 text-rose-800';
+                }
+
+                // Énoncé
+                document.getElementById('question-text').innerHTML = q.question;
+
+                // Render Options
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                const savedAnswer = this.userAnswers[this.currentIndex];
+                const isAnswered = savedAnswer.selected !== null;
+
+                q.options.forEach((optText, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = `w-full text-left p-4 rounded-xl border text-slate-800 font-medium transition-all flex items-center justify-between group cursor-pointer ${
+                        isAnswered ? 'cursor-default' : 'hover:border-indigo-500 hover:bg-indigo-50/50'
+                    }`;
+
+                    let borderBgClass = 'border-slate-200 bg-white';
+                    
+                    if (isAnswered) {
+                        if (idx === q.correct) {
+                            borderBgClass = 'border-emerald-500 bg-emerald-50 text-emerald-900 font-semibold';
+                        } else if (idx === savedAnswer.selected) {
+                            borderBgClass = 'border-rose-500 bg-rose-50 text-rose-900';
+                        } else {
+                            borderBgClass = 'border-slate-100 bg-slate-50 opacity-60';
+                        }
+                    }
+
+                    btn.className += ` ${borderBgClass}`;
+                    btn.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-semibold flex items-center justify-center text-xs group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                ${String.fromCharCode(65 + idx)}
+                            </span>
+                            <span>${optText}</span>
+                        </div>
+                        ${isAnswered && idx === q.correct ? '<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>' : ''}
+                        ${isAnswered && idx === savedAnswer.selected && idx !== q.correct ? '<i class="fa-solid fa-circle-xmark text-rose-500 text-lg"></i>' : ''}
+                    `;
+
+                    if (!isAnswered) {
+                        btn.onclick = () => this.selectOption(idx);
+                    }
+
+                    container.appendChild(btn);
+                });
+
+                // Explication
+                const explBox = document.getElementById('explanation-box');
+                if (isAnswered) {
+                    explBox.classList.remove('hidden');
+                    const isCorrect = savedAnswer.selected === q.correct;
+                    explBox.className = `mt-6 p-5 rounded-xl border ${isCorrect ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'}`;
+                    
+                    document.getElementById('explanation-icon').innerHTML = isCorrect 
+                        ? '<i class="fa-solid fa-lightbulb text-emerald-600"></i>' 
+                        : '<i class="fa-solid fa-triangle-exclamation text-rose-600"></i>';
+                    
+                    document.getElementById('explanation-title').textContent = isCorrect ? 'Explication (Bonne Réponse)' : 'Explication (Erreur)';
+                    document.getElementById('explanation-title').className = `font-bold text-xs uppercase tracking-wider ${isCorrect ? 'text-emerald-800' : 'text-rose-800'}`;
+                    
+                    document.getElementById('explanation-text').innerHTML = q.explanation.replace(/\n/g, '<br>');
+                } else {
+                    explBox.classList.add('hidden');
+                }
+
+                // Boutons navigation
+                document.getElementById('btn-prev').disabled = this.currentIndex === 0;
+                document.getElementById('btn-next').innerHTML = this.currentIndex === this.activeQuestions.length - 1 ? 'Terminer le Quiz <i class="fa-solid fa-flag-checkered ml-2"></i>' : 'Suivant <i class="fa-solid fa-arrow-right ml-2"></i>';
+
+                // Re-rendre KaTeX sur les éléments modifiés
+                this.renderMath();
+            }
+
+            selectOption(idx) {
+                const now = Date.now();
+                const spentSec = Math.round((now - this.questionStartTime) / 1000);
+
+                this.userAnswers[this.currentIndex] = {
+                    selected: idx,
+                    timeSpent: (this.userAnswers[this.currentIndex].timeSpent || 0) + spentSec
+                };
+
+                this.loadQuestion();
+            }
+
+            nextQuestion() {
+                if (this.currentIndex < this.activeQuestions.length - 1) {
+                    this.currentIndex++;
+                    this.loadQuestion();
+                } else {
+                    this.finishQuiz();
+                }
+            }
+
+            prevQuestion() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                    this.loadQuestion();
+                }
+            }
+
+            finishQuiz() {
+                clearInterval(this.timerInterval);
+                this.computeAndShowStats();
+                this.showScreen('stats');
+            }
+
+            // Calculs Statistiques et rendu du Bilan
+            computeAndShowStats() {
+                const total = this.activeQuestions.length;
+                let correctCount = 0;
+
+                const diffStats = {
+                    easy: { total: 0, correct: 0 },
+                    medium: { total: 0, correct: 0 },
+                    hard: { total: 0, correct: 0 }
+                };
+
+                this.activeQuestions.forEach((q, idx) => {
+                    const ans = this.userAnswers[idx];
+                    const isCorrect = ans && ans.selected === q.correct;
+                    
+                    diffStats[q.difficulty].total++;
+                    if (isCorrect) {
+                        correctCount++;
+                        diffStats[q.difficulty].correct++;
+                    }
+                });
+
+                const scorePct = Math.round((correctCount / total) * 100) || 0;
+                const avgTime = Math.round(this.totalSeconds / total) || 0;
+
+                // DOM Updates
+                document.getElementById('stat-score').textContent = `${scorePct}%`;
+                document.getElementById('stat-count').textContent = `${correctCount} / ${total}`;
+                document.getElementById('stat-time').textContent = this.formatTime(this.totalSeconds);
+                document.getElementById('stat-avg-time').textContent = `${avgTime}s`;
+
+                // Progress Bars par Niveau
+                this.updateDiffBar('easy', diffStats.easy);
+                this.updateDiffBar('medium', diffStats.medium);
+                this.updateDiffBar('hard', diffStats.hard);
+
+                // Render Donut Chart
+                this.renderChart(correctCount, total - correctCount);
+
+                // Render Review List
+                this.renderReviewList('all');
+            }
+
+            updateDiffBar(diffKey, data) {
+                const bar = document.getElementById(`stat-${diffKey}-bar`);
+                const text = document.getElementById(`stat-${diffKey}-text`);
+                
+                if (data.total === 0) {
+                    bar.style.width = '0%';
+                    text.textContent = 'N/A';
+                    return;
+                }
+
+                const pct = Math.round((data.correct / data.total) * 100);
+                bar.style.width = `${pct}%`;
+                text.textContent = `${data.correct}/${data.total} (${pct}%)`;
+            }
+
+            renderChart(correct, incorrect) {
+                const ctx = document.getElementById('chart-doughnut').getContext('2d');
+                if (this.chartInstance) {
+                    this.chartInstance.destroy();
+                }
+
+                this.chartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Correctes', 'Incorrectes / Omises'],
+                        datasets: [{
+                            data: [correct, incorrect],
+                            backgroundColor: ['#10b981', '#f43f5e'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        },
+                        cutout: '70%'
+                    }
+                });
+            }
+
+            renderReviewList(filter) {
+                const container = document.getElementById('review-list');
+                container.innerHTML = '';
+
+                this.activeQuestions.forEach((q, idx) => {
+                    const ans = this.userAnswers[idx];
+                    const isCorrect = ans && ans.selected === q.correct;
+
+                    if (filter === 'errors' && isCorrect) return;
+
+                    const card = document.createElement('div');
+                    card.className = `p-5 rounded-xl border ${isCorrect ? 'border-slate-200 bg-slate-50/50' : 'border-rose-200 bg-rose-50/30'} space-y-3`;
+
+                    const userChoiceText = (ans && ans.selected !== null) ? q.options[ans.selected] : 'Non répondue';
+                    const correctChoiceText = q.options[q.correct];
+
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start gap-4">
+                            <div class="space-y-1">
+                                <span class="text-xs font-semibold uppercase tracking-wider ${q.difficulty === 'easy' ? 'text-emerald-600' : q.difficulty === 'medium' ? 'text-amber-600' : 'text-rose-600'}">
+                                    Question ${idx + 1} • ${q.difficulty.toUpperCase()}
+                                </span>
+                                <h4 class="font-bold text-slate-900 text-base">${q.question}</h4>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-bold ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                                ${isCorrect ? 'Correct' : 'Incorrect'}
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm pt-2 border-t border-slate-200/60">
+                            <div>
+                                <span class="text-xs text-slate-500 font-medium block">Votre réponse :</span>
+                                <span class="font-semibold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${userChoiceText}</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 font-medium block">Réponse attendue :</span>
+                                <span class="font-semibold text-emerald-700">${correctChoiceText}</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-3.5 rounded-lg border border-slate-200 text-xs text-slate-700 space-y-1">
+                            <span class="font-bold text-indigo-600 uppercase tracking-wider block">Explication pas à pas :</span>
+                            <div>${q.explanation.replace(/\n/g, '<br>')}</div>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+
+                this.renderMath();
+            }
+
+            filterReview(type) {
+                this.renderReviewList(type);
+            }
+
+            formatTime(seconds) {
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // Initialisation globale
+        const app = new QuizApp();
+
+        window.addEventListener('load', () => {
+            if (window.renderMathInElement) {
+                const w = document.getElementById('katex-warning');
+                if (w) w.remove();
+                app.renderMath();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-count]').forEach(el => {
+                const k = el.dataset.count;
+                el.textContent = k === 'all' ? questionsData.length : questionsData.filter(q => q.difficulty === k).length;
+            });
+            app.renderMath();
+        });
+    </script>
+</body>
+</html>
