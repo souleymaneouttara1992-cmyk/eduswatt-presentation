@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours Complet : Équations & Inéquations du Second Degré</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax pour rendu LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .math-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(243,244,246,0.9) 100%);
+        }
+        /* Style personnalisé pour la barre de défilement */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Navbar Sticky -->
+    <header class="sticky top-0 z-50 bg-indigo-900/95 backdrop-blur-md text-white shadow-lg border-b border-indigo-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-indigo-600 rounded-lg shadow-inner">
+                    <i class="fa-solid fa-calculator text-2xl text-yellow-300"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg sm:text-xl tracking-tight leading-none text-white">Maths Lycée</h1>
+                    <p class="text-xs text-indigo-200">Programme Officiel : 2<sup>nd</sup> Degré</p>
+                </div>
+            </div>
+            <!-- Navigation rapide desktop -->
+            <nav class="hidden lg:flex space-x-1 text-sm font-medium">
+                <a href="#intro" class="px-3 py-1.5 rounded-md hover:bg-indigo-800 transition">Théorie</a>
+                <a href="#pieges" class="px-3 py-1.5 rounded-md hover:bg-amber-500/20 text-amber-300 hover:text-amber-200 border border-amber-500/30 transition"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Pièges & Astuces</a>
+                <a href="#exercices" class="px-3 py-1.5 rounded-md hover:bg-indigo-800 transition">Exercices</a>
+            </nav>
+            <button id="mobileMenuBtn" class="lg:hidden text-2xl focus:outline-none p-1">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <!-- Menu mobile -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-indigo-950 px-4 pt-2 pb-4 space-y-2 border-t border-indigo-800">
+            <a href="#intro" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-800">Théorie & Formules</a>
+            <a href="#pieges" class="block px-3 py-2 rounded-md text-base font-medium text-amber-300 hover:bg-amber-900/40"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Pièges & Astuces Examen</a>
+            <a href="#exercices" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-800">Exercices Corrigés</a>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-blue-900 text-white py-12 px-4 sm:px-6 lg:px-8 shadow-inner relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none text-9xl font-serif">
+            $ax^2+bx+c$
+        </div>
+        <div class="max-w-5xl mx-auto relative z-10">
+            <span class="bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block">Module Complexe</span>
+            <h1 class="text-3xl sm:text-5xl font-black mb-4 tracking-tight">Équations & Inéquations du Second Degré</h1>
+            <p class="text-lg sm:text-xl text-indigo-100 max-w-3xl font-light">
+                Résolution formelle, formes canoniques, discriminant, factorisation, tableaux de signes et équations bicarrees. Cours rigoureux conforme au programme avec exercices corrigés pas à pas.
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar / Sommaire interactif -->
+        <aside class="lg:col-span-1 space-y-4">
+            <div class="sticky top-20 bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+                <h3 class="text-sm font-bold uppercase text-slate-400 tracking-wider mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-ol text-indigo-600"></i> Sommaire du Cours
+                </h3>
+                <nav class="space-y-1.5 text-sm font-medium">
+                    <a href="#sec1" class="block px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">1. Équations $x^2 = a$</a>
+                    <a href="#sec2" class="block px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">2. Forme Canonique & $\Delta$</a>
+                    <a href="#sec3" class="block px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">3. Résolution de $ax^2+bx+c=0$</a>
+                    <a href="#sec4" class="block px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">4. Équations Bicarrées</a>
+                    <a href="#sec5" class="block px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">5. Factorisation du Trinôme</a>
+                    <a href="#sec6" class="block px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">6. Signe & Inéquations</a>
+                    <a href="#pieges" class="block px-3 py-2 rounded-lg text-amber-800 bg-amber-50 hover:bg-amber-100 font-semibold transition border border-amber-200">
+                        <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-600"></i> Pièges Cités en Examen
+                    </a>
+                    <a href="#exercices" class="block px-3 py-2 rounded-lg text-indigo-700 bg-indigo-50 hover:bg-indigo-100 font-semibold transition border border-indigo-200">
+                        <i class="fa-solid fa-pen-ruler mr-1 text-indigo-600"></i> Exercices & Solutions
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Course Content Column -->
+        <div class="lg:col-span-3 space-y-10">
+
+            <!-- SECTION 1 -->
+            <section id="sec1" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 scroll-mt-24">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-lg text-sm">1</span>
+                    <h2 class="text-2xl font-bold text-slate-900">Équations du type $x^2 = a$ ($a \in \mathbb{R}$)</h2>
+                </div>
+                <div class="prose max-w-none text-slate-600 space-y-4">
+                    <p>Soit $x$ une inconnue réelle et $a$ un nombre réel fixé. On cherche à résoudre dans $\mathbb{R}$ l'équation $x^2 = a$.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                        <div class="p-4 rounded-xl bg-red-50 border border-red-200">
+                            <h4 class="font-bold text-red-800 mb-2 text-sm uppercase tracking-wide">Cas 1 : $a < 0$</h4>
+                            <p class="text-sm text-red-900">Un carré réel étant toujours positif ou nul ($\forall x \in \mathbb{R}, x^2 \ge 0$), l'équation n'a aucune solution réelle.</p>
+                            <div class="mt-3 font-semibold text-center text-red-700 bg-white py-1 rounded border border-red-200">$S = \emptyset$</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-100 border border-slate-300">
+                            <h4 class="font-bold text-slate-800 mb-2 text-sm uppercase tracking-wide">Cas 2 : $a = 0$</h4>
+                            <p class="text-sm text-slate-700">L'équation s'écrit $x^2 = 0$. La seule solution est $x = 0$.</p>
+                            <div class="mt-3 font-semibold text-center text-slate-800 bg-white py-1 rounded border border-slate-300">$S = \{0\}$</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                            <h4 class="font-bold text-emerald-800 mb-2 text-sm uppercase tracking-wide">Cas 3 : $a > 0$</h4>
+                            <p class="text-sm text-emerald-900">L'équation équivaut à $x^2 - a = 0 \iff (x-\sqrt{a})(x+\sqrt{a}) = 0$. Elle admet deux solutions distinctes.</p>
+                            <div class="mt-3 font-semibold text-center text-emerald-800 bg-white py-1 rounded border border-emerald-200">$S = \{-\sqrt{a}\,;\, \sqrt{a}\}$</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2 -->
+            <section id="sec2" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 scroll-mt-24">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-lg text-sm">2</span>
+                    <h2 class="text-2xl font-bold text-slate-900">Trinôme du Second Degré & Forme Canonique</h2>
+                </div>
+                <div class="space-y-4 text-slate-600">
+                    <div class="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100">
+                        <h3 class="font-bold text-indigo-900 mb-1">Définition (Trinôme du second degré)</h3>
+                        <p class="text-sm text-indigo-950">
+                            On appelle <strong>trinôme du second degré</strong> toute fonction polynôme $P$ définie sur $\mathbb{R}$ par :
+                            $$P(x) = ax^2 + bx + c$$
+                            où $a, b, c$ sont des réels fixés avec <strong>$a \neq 0$</strong>.
+                        </p>
+                    </div>
+
+                    <h3 class="font-bold text-lg text-slate-800 pt-2">Démonstration rigoureuse de la Forme Canonique</h3>
+                    <p class="text-sm">Puisque $a \neq 0$, nous pouvons factoriser par $a$ :</p>
+                    <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-sm overflow-x-auto shadow-inner">
+                        $$P(x) = a \left[ x^2 + \frac{b}{a}x + \frac{c}{a} \right]$$
+                        $$\text{Remarquons que } x^2 + \frac{b}{a}x \text{ est le début du développement de } \left(x + \frac{b}{2a}\right)^2 = x^2 + \frac{b}{a}x + \frac{b^2}{4a^2}$$
+                        $$\text{D'où : } x^2 + \frac{b}{a}x = \left(x + \frac{b}{2a}\right)^2 - \frac{b^2}{4a^2}$$
+                        $$\text{En substituant : } P(x) = a \left[ \left(x + \frac{b}{2a}\right)^2 - \frac{b^2}{4a^2} + \frac{c}{a} \right] = a \left[ \left(x + \frac{b}{2a}\right)^2 - \frac{b^2 - 4ac}{4a^2} \right]$$
+                    </div>
+
+                    <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                        <p class="text-sm text-amber-900">
+                            On pose le <strong>discriminant</strong> : $\mathbf{\Delta = b^2 - 4ac}$.<br>
+                            La <strong>forme canonique</strong> s'écrit alors :
+                            $$P(x) = a \left[ \left(x + \frac{b}{2a}\right)^2 - \frac{\Delta}{4a^2} \right]$$
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3 -->
+            <section id="sec3" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 scroll-mt-24">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-lg text-sm">3</span>
+                    <h2 class="text-2xl font-bold text-slate-900">Résolution de l'équation $ax^2 + bx + c = 0$ ($a \neq 0$)</h2>
+                </div>
+                <div class="space-y-4 text-slate-600">
+                    <p>En utilisant la forme canonique, l'équation $P(x) = 0$ équivaut à :</p>
+                    $$\left(x + \frac{b}{2a}\right)^2 = \frac{\Delta}{4a^2}$$
+                    <p>Le dénominateur $4a^2 = (2a)^2$ étant strictement positif, le nombre de solutions dépend uniquement du signe du discriminant $\Delta$.</p>
+
+                    <div class="overflow-x-auto my-4">
+                        <table class="w-full text-sm text-left text-slate-700 border-collapse">
+                            <thead class="bg-indigo-900 text-white uppercase text-xs">
+                                <tr>
+                                    <th class="p-3 rounded-tl-lg">Signe de $\Delta$</th>
+                                    <th class="p-3">Nombre de solutions</th>
+                                    <th class="p-3">Expression des Solutions dans $\mathbb{R}$</th>
+                                    <th class="p-3 rounded-tr-lg">Ensemble Solution $S$</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 border-b border-slate-200">
+                                <tr class="bg-red-50/50">
+                                    <td class="p-3 font-bold text-red-600">$\Delta < 0$</td>
+                                    <td class="p-3">Aucune solution réelle</td>
+                                    <td class="p-3 text-slate-500">Un carré égal à un nombre négatif est impossible</td>
+                                    <td class="p-3 font-mono font-bold">$S = \emptyset$</td>
+                                </tr>
+                                <tr class="bg-slate-50">
+                                    <td class="p-3 font-bold text-slate-600">$\Delta = 0$</td>
+                                    <td class="p-3">Une solution double</td>
+                                    <td class="p-3">$x_0 = -\frac{b}{2a}$</td>
+                                    <td class="p-3 font-mono font-bold">$S = \left\{ -\frac{b}{2a} \right\}$</td>
+                                </tr>
+                                <tr class="bg-emerald-50/50">
+                                    <td class="p-3 font-bold text-emerald-600">$\Delta > 0$</td>
+                                    <td class="p-3">Deux solutions distinctes</td>
+                                    <td class="p-3">$x_1 = \frac{-b - \sqrt{\Delta}}{2a} \quad \text{et} \quad x_2 = \frac{-b + \sqrt{\Delta}}{2a}$</td>
+                                    <td class="p-3 font-mono font-bold">$S = \left\{ \frac{-b - \sqrt{\Delta}}{2a} \,;\, \frac{-b + \sqrt{\Delta}}{2a} \right\}$</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4 -->
+            <section id="sec4" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 scroll-mt-24">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-lg text-sm">4</span>
+                    <h2 class="text-2xl font-bold text-slate-900">Équations Bicarrées</h2>
+                </div>
+                <div class="space-y-4 text-slate-600">
+                    <div class="p-4 bg-slate-100 rounded-xl border border-slate-300">
+                        <h3 class="font-bold text-slate-900">Définition</h3>
+                        <p class="text-sm">
+                            Une <strong>équation bicarrée</strong> est une équation de la forme :
+                            $$a x^4 + b x^2 + c = 0 \quad (a \neq 0)$$
+                        </p>
+                    </div>
+
+                    <h3 class="font-semibold text-slate-800">Méthode de résolution par changement de variable :</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-sm pl-2">
+                        <li>On pose $X = x^2$. Puisqu'un carré réel est toujours positif ou nul, la condition impérative est <strong>$X \ge 0$</strong>.</li>
+                        <li>L'équation devient l'équation du second degré associée : $$aX^2 + bX + c = 0$$</li>
+                        <li>On calcule le discriminant $\Delta_X = b^2 - 4ac$ et on détermine les solutions $X$.</li>
+                        <li><strong>Rejection / Validation :</strong>
+                            <ul class="list-disc list-inside pl-6 mt-1 space-y-1 text-slate-500">
+                                <li>Si une valeur $X < 0$, elle ne donne aucune solution en $x$.</li>
+                                <li>Si $X = 0$, alors $x^2 = 0 \implies x = 0$.</li>
+                                <li>Si $X > 0$, alors $x^2 = X \implies x = \sqrt{X}$ ou $x = -\sqrt{X}$.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- SECTION 5 -->
+            <section id="sec5" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 scroll-mt-24">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-lg text-sm">5</span>
+                    <h2 class="text-2xl font-bold text-slate-900">Factorisation d'un Trinôme du Second Degré</h2>
+                </div>
+                <div class="space-y-4 text-slate-600">
+                    <p>Soit le trinôme $P(x) = ax^2 + bx + c$ ($a \neq 0$). Sa factorisation dépend directement du signe du discriminant $\Delta$ :</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-xl bg-red-50 border border-red-200">
+                            <h4 class="font-bold text-red-800 text-sm">Si $\Delta < 0$</h4>
+                            <p class="text-xs text-red-700 mt-2">Le trinôme $P(x)$ n'est <strong>pas factorisable</strong> dans $\mathbb{R}$ sous forme d'un produit de facteurs du premier degré.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-100 border border-slate-300">
+                            <h4 class="font-bold text-slate-800 text-sm">Si $\Delta = 0$</h4>
+                            <p class="text-xs text-slate-700 mt-2">Le trinôme s'écrit sous forme d'un carré parfait :</p>
+                            <p class="text-center font-bold text-slate-900 mt-2 text-sm">$P(x) = a\left(x - x_0\right)^2$</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                            <h4 class="font-bold text-emerald-800 text-sm">Si $\Delta > 0$</h4>
+                            <p class="text-xs text-emerald-700 mt-2">En désignant par $x_1$ et $x_2$ les deux racines :</p>
+                            <p class="text-center font-bold text-emerald-900 mt-2 text-sm">$P(x) = a(x - x_1)(x - x_2)$</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6 -->
+            <section id="sec6" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 scroll-mt-24">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-lg text-sm">6</span>
+                    <h2 class="text-2xl font-bold text-slate-900">Signe du Trinôme & Inéquations du 2<sup>nd</sup> Degré</h2>
+                </div>
+                <div class="space-y-4 text-slate-600">
+                    <div class="p-4 bg-indigo-900 text-white rounded-xl shadow">
+                        <h3 class="font-bold text-amber-300 text-lg mb-1"><i class="fa-solid fa-lightbulb mr-2"></i> Règle d'or du Signe du Trinôme</h3>
+                        <p class="text-sm leading-relaxed">
+                            Le trinôme $P(x) = ax^2 + bx + c$ est <strong>du signe de $a$ partout</strong>, sauf entre ses racines (lorsqu'elles existent, c'est-à-dire quand $\Delta > 0$).
+                        </p>
+                    </div>
+
+                    <!-- Tableaux de signes visuels -->
+                    <div class="space-y-4 pt-2">
+                        <!-- Case Delta < 0 -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
+                            <h4 class="font-bold text-slate-800 text-sm mb-2">Cas 1 : $\Delta < 0$ (Pas de racine)</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-center text-xs border border-slate-300 bg-white">
+                                    <tr class="border-b border-slate-300">
+                                        <td class="p-2 font-bold bg-slate-100 w-1/4">$x$</td>
+                                        <td class="p-2">$-\infty$</td>
+                                        <td class="p-2 font-bold"> $+\infty$</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-bold bg-slate-100">$ax^2+bx+c$</td>
+                                        <td colspan="2" class="p-2 text-indigo-700 font-bold">Signe de $a$</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Case Delta = 0 -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
+                            <h4 class="font-bold text-slate-800 text-sm mb-2">Cas 2 : $\Delta = 0$ (Racine double $x_0 = -\frac{b}{2a}$)</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-center text-xs border border-slate-300 bg-white">
+                                    <tr class="border-b border-slate-300">
+                                        <td class="p-2 font-bold bg-slate-100 w-1/4">$x$</td>
+                                        <td class="p-2">$-\infty$</td>
+                                        <td class="p-2 font-bold">$x_0$</td>
+                                        <td class="p-2">$+\infty$</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-bold bg-slate-100">$ax^2+bx+c$</td>
+                                        <td class="p-2 text-indigo-700 font-bold">Signe de $a$</td>
+                                        <td class="p-2 font-bold">0</td>
+                                        <td class="p-2 text-indigo-700 font-bold">Signe de $a$</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Case Delta > 0 -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
+                            <h4 class="font-bold text-slate-800 text-sm mb-2">Cas 3 : $\Delta > 0$ (Deux racines $x_1 < x_2$)</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-center text-xs border border-slate-300 bg-white">
+                                    <tr class="border-b border-slate-300">
+                                        <td class="p-2 font-bold bg-slate-100 w-1/5">$x$</td>
+                                        <td class="p-2">$-\infty$</td>
+                                        <td class="p-2 font-bold">$x_1$</td>
+                                        <td class="p-2 font-bold"> </td>
+                                        <td class="p-2 font-bold">$x_2$</td>
+                                        <td class="p-2">$+\infty$</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-bold bg-slate-100">$ax^2+bx+c$</td>
+                                        <td class="p-2 text-indigo-700 font-bold">Signe de $a$</td>
+                                        <td class="p-2 font-bold">0</td>
+                                        <td class="p-2 text-pink-600 font-bold">Signe de ($-a$)</td>
+                                        <td class="p-2 font-bold">0</td>
+                                        <td class="p-2 text-indigo-700 font-bold">Signe de $a$</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION PIÈGES ET ASTUCES EXAMEN -->
+            <section id="pieges" class="bg-gradient-to-br from-amber-50 to-orange-50 p-6 sm:p-8 rounded-2xl shadow-sm border border-amber-200 scroll-mt-24">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-3 bg-amber-500 text-white rounded-xl shadow-md">
+                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-amber-950">Pièges Cachés & Astuces d'Examen</h2>
+                        <p class="text-xs text-amber-800 font-medium">Les détails qui font gagner des points et évitent les erreurs classiques</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Piège 1 -->
+                    <div class="bg-white p-5 rounded-xl border border-amber-200 shadow-sm space-y-2">
+                        <div class="flex items-center gap-2 text-amber-700 font-bold text-sm">
+                            <i class="fa-solid fa-bug"></i> Piège #1 : Le coefficient $a$ nul ou paramétrique
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Si une équation s'écrit $(m-1)x^2 + 2x + 3 = 0$, attention ! Ce n'est un trinôme du second degré que si $m-1 \neq 0 \iff m \neq 1$. Si $m=1$, l'équation devient $2x+3=0$ (premier degré). N'appliquez jamais $\Delta$ sans vérifier que le coefficient de $x^2$ n'est pas nul !
+                        </p>
+                    </div>
+
+                    <!-- Piège 2 -->
+                    <div class="bg-white p-5 rounded-xl border border-amber-200 shadow-sm space-y-2">
+                        <div class="flex items-center gap-2 text-amber-700 font-bold text-sm">
+                            <i class="fa-solid fa-bug"></i> Piège #2 : Fausses solutions dans les Bicarrées
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Lors de la résolution de $ax^4+bx^2+c=0$, si vous trouvez $X_1 = -4$ et $X_2 = 9$, n'écrivez <strong>JAMAIS</strong> $S = \{-4, 9\}$. L'équation $x^2 = -4$ n'a pas de solution ! Les seules solutions réelles sont $x = \pm\sqrt{9} = \pm 3$, soit $S = \{-3, 3\}$.
+                        </p>
+                    </div>
+
+                    <!-- Astuce 3 -->
+                    <div class="bg-white p-5 rounded-xl border border-emerald-200 shadow-sm space-y-2">
+                        <div class="flex items-center gap-2 text-emerald-700 font-bold text-sm">
+                            <i class="fa-solid fa-bolt"></i> Astuce Examen : Racines Évidentes
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Avant de foncer tête baissée dans le calcul de $\Delta$, vérifiez ces deux règles d'or :
+                            <br>• Si <strong>$a + b + c = 0$</strong>, alors $x_1 = 1$ et $x_2 = \frac{c}{a}$.
+                            <br>• Si <strong>$a - b + c = 0$</strong>, alors $x_1 = -1$ et $x_2 = -\frac{c}{a}$.
+                        </p>
+                    </div>
+
+                    <!-- Astuce 4 -->
+                    <div class="bg-white p-5 rounded-xl border border-emerald-200 shadow-sm space-y-2">
+                        <div class="flex items-center gap-2 text-emerald-700 font-bold text-sm">
+                            <i class="fa-solid fa-bolt"></i> Astuce Examen : Discriminant Réduit $\Delta'$
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Lorsque le coefficient $b$ est pair ($b = 2b'$), vous pouvez utiliser le discriminant réduit :
+                            $$\Delta' = b'^2 - ac$$
+                            Si $\Delta' > 0$, les racines sont exprimées plus simplement par $x = \frac{-b' \pm \sqrt{\Delta'}}{a}$ (sans diviser par $2a$).
+                        </p>
+                    </div>
+
+                    <!-- Piège 5 -->
+                    <div class="bg-white p-5 rounded-xl border border-amber-200 shadow-sm space-y-2 md:col-span-2">
+                        <div class="flex items-center gap-2 text-amber-700 font-bold text-sm">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Piège #5 : Fractions Rationnelles et Valeurs Interdites
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Pour résoudre une inéquation du type $\frac{ax^2+bx+c}{px+q} \le 0$, il faut impérativement poser d'abord le <strong>Domaine de Définition ($D_E$)</strong> en excluant les racines du dénominateur ($px+q \neq 0$). Dans le tableau de signe final, marquez le pôle par une double barre ($\|$) !
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION EXERCICES DIVERSIFIÉS CORRIGÉS -->
+            <section id="exercices" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 scroll-mt-24 space-y-8">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900">Exercices Diversifiés & Solutions Pas-à-Pas</h2>
+                        <p class="text-sm text-slate-500">Testez vos connaissances et déroulez les corrigés détaillés.</p>
+                    </div>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">6 Exercices</span>
+                </div>
+
+                <!-- EXERCICE 1 -->
+                <div class="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition bg-slate-50/50">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="font-bold text-indigo-600 text-sm">Exercice 1 : Équations de forme $x^2 = a$</span>
+                        <span class="text-xs px-2 py-0.5 bg-green-100 text-green-800 rounded font-medium">Facile</span>
+                    </div>
+                    <p class="text-sm text-slate-800 mb-4 font-medium">
+                        Résoudre dans $\mathbb{R}$ les équations suivantes :
+                        <br>a) $x^2 = -5$ &nbsp;&nbsp;&nbsp;&nbsp; b) $x^2 = 7$ &nbsp;&nbsp;&nbsp;&nbsp; c) $3x^2 - 12 = 0$
+                    </p>
+                    <button onclick="toggleSolution('sol1')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Afficher / Masquer la solution
+                    </button>
+                    <div id="sol1" class="hidden mt-4 p-4 bg-white rounded-lg border border-indigo-100 text-sm space-y-2 text-slate-700">
+                        <p><strong>a) $x^2 = -5$ :</strong> Le membre de droite est strictement négatif ($-5 < 0$). Un carré réel ne pouvant être négatif, $S_a = \emptyset$.</p>
+                        <p><strong>b) $x^2 = 7$ :</strong> $7 > 0$, l'équation possède deux solutions réelles distinctes : $S_b = \{-\sqrt{7}\,;\, \sqrt{7}\}$.</p>
+                        <p><strong>c) $3x^2 - 12 = 0$ :</strong> $3x^2 = 12 \iff x^2 = \frac{12}{3} = 4$. Comme $4 > 0$, $x = -\sqrt{4} = -2$ ou $x = \sqrt{4} = 2$. Donc $S_c = \{-2\,;\, 2\}$.</p>
+                    </div>
+                </div>
+
+                <!-- EXERCICE 2 -->
+                <div class="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition bg-slate-50/50">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="font-bold text-indigo-600 text-sm">Exercice 2 : Équations du 2nd degré & Racines Évidentes</span>
+                        <span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded font-medium">Moyen</span>
+                    </div>
+                    <p class="text-sm text-slate-800 mb-4 font-medium">
+                        Résoudre dans $\mathbb{R}$ :
+                        <br>a) $2x^2 - 5x + 3 = 0$
+                        <br>b) $x^2 + 4x + 5 = 0$
+                        <br>c) $5x^2 + 8x + 3 = 0$
+                    </p>
+                    <button onclick="toggleSolution('sol2')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Afficher / Masquer la solution
+                    </button>
+                    <div id="sol2" class="hidden mt-4 p-4 bg-white rounded-lg border border-indigo-100 text-sm space-y-3 text-slate-700">
+                        <p><strong>a) $2x^2 - 5x + 3 = 0$ :</strong>
+                            <br><i>Astuce racine évidente :</i> $a+b+c = 2 + (-5) + 3 = 0$.
+                            <br>Donc $x_1 = 1$ et $x_2 = \frac{c}{a} = \frac{3}{2}$.
+                            <br><i>Vérification par $\Delta$ :</i> $\Delta = (-5)^2 - 4(2)(3) = 25 - 24 = 1 > 0$. Roots: $\frac{5 \pm 1}{4} \implies \{1\,;\, \frac{3}{2}\}$. $S_a = \left\{1\,;\, \frac{3}{2}\right\}$.
+                        </p>
+                        <p><strong>b) $x^2 + 4x + 5 = 0$ :</strong>
+                            <br>$\Delta = 4^2 - 4(1)(5) = 16 - 20 = -4$.
+                            <br>Comme $\Delta < 0$, l'équation n'a pas de solution réelle. $S_b = \emptyset$.
+                        </p>
+                        <p><strong>c) $5x^2 + 8x + 3 = 0$ :</strong>
+                            <br><i>Astuce racine évidente :</i> $a - b + c = 5 - 8 + 3 = 0$.
+                            <br>Donc $x_1 = -1$ et $x_2 = -\frac{c}{a} = -\frac{3}{5}$. $S_c = \left\{-1\,;\, -\frac{3}{5}\right\}$.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- EXERCICE 3 -->
+                <div class="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition bg-slate-50/50">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="font-bold text-indigo-600 text-sm">Exercice 3 : Équations Bicarrées avec Pièges</span>
+                        <span class="text-xs px-2 py-0.5 bg-red-100 text-red-800 rounded font-medium">Difficile / Piège</span>
+                    </div>
+                    <p class="text-sm text-slate-800 mb-4 font-medium">
+                        Résoudre dans $\mathbb{R}$ :
+                        <br>a) $x^4 - 5x^2 + 4 = 0$
+                        <br>b) $x^4 + 3x^2 - 4 = 0$
+                        <br>c) $2x^4 + 5x^2 + 3 = 0$
+                    </p>
+                    <button onclick="toggleSolution('sol3')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Afficher / Masquer la solution
+                    </button>
+                    <div id="sol3" class="hidden mt-4 p-4 bg-white rounded-lg border border-indigo-100 text-sm space-y-3 text-slate-700">
+                        <p><strong>a) $x^4 - 5x^2 + 4 = 0$ :</strong>
+                            <br>Posons $X = x^2$ ($X \ge 0$). L'équation devient $X^2 - 5X + 4 = 0$.
+                            <br>Somme des coefficients $1 - 5 + 4 = 0 \implies X_1 = 1$ et $X_2 = 4$.
+                            <br>Les deux valeurs sont positives ($1 > 0$ et $4 > 0$).
+                            <br>• $x^2 = 1 \implies x = -1$ ou $x = 1$.
+                            <br>• $x^2 = 4 \implies x = -2$ ou $x = 2$.
+                            <br>D'où $S_a = \{-2\,;\, -1\,;\, 1\,;\, 2\}$.
+                        </p>
+                        <p><strong>b) $x^4 + 3x^2 - 4 = 0$ :</strong>
+                            <br>Posons $X = x^2$ ($X \ge 0$). L'équation devient $X^2 + 3X - 4 = 0$.
+                            <br>$1 + 3 - 4 = 0 \implies X_1 = 1$ et $X_2 = -4$.
+                            <br><strong>Piège !</strong> $X_2 = -4 < 0$, donc l'équation $x^2 = -4$ n'a aucune solution réelle !
+                            <br>Seule $X_1 = 1$ convient $\implies x^2 = 1 \implies x = \pm 1$.
+                            <br>D'où $S_b = \{-1\,;\, 1\}$.
+                        </p>
+                        <p><strong>c) $2x^4 + 5x^2 + 3 = 0$ :</strong>
+                            <br>Posons $X = x^2$ ($X \ge 0$). L'équation devient $2X^2 + 5X + 3 = 0$.
+                            <br>$a - b + c = 2 - 5 + 3 = 0 \implies X_1 = -1$ et $X_2 = -\frac{3}{2}$.
+                            <br>Les deux valeurs $X_1$ et $X_2$ sont strictement négatives ! Aucune racine réelle pour $x$.
+                            <br>D'où $S_c = \emptyset$.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- EXERCICE 4 -->
+                <div class="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition bg-slate-50/50">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="font-bold text-indigo-600 text-sm">Exercice 4 : Factorisation et Étude de Signe</span>
+                        <span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded font-medium">Moyen</span>
+                    </div>
+                    <p class="text-sm text-slate-800 mb-4 font-medium">
+                        Soit le trinôme $P(x) = -2x^2 + 5x + 3$.
+                        <br>1. Calculer le discriminant $\Delta$ et déterminer les racines de $P(x)$.
+                        <br>2. En déduire la factorisation de $P(x)$.
+                        <br>3. Dresser le tableau de signe de $P(x)$.
+                    </p>
+                    <button onclick="toggleSolution('sol4')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Afficher / Masquer la solution
+                    </button>
+                    <div id="sol4" class="hidden mt-4 p-4 bg-white rounded-lg border border-indigo-100 text-sm space-y-3 text-slate-700">
+                        <p><strong>1. Discriminant et Racines :</strong>
+                            <br>$a = -2, b = 5, c = 3$.
+                            <br>$\Delta = 5^2 - 4(-2)(3) = 25 + 24 = 49 = 7^2 > 0$.
+                            <br>$$x_1 = \frac{-5 - 7}{2(-2)} = \frac{-12}{-4} = 3 \quad ; \quad x_2 = \frac{-5 + 7}{-4} = \frac{2}{-4} = -\frac{1}{2}$$
+                        </p>
+                        <p><strong>2. Factorisation :</strong>
+                            <br> $P(x) = a(x - x_1)(x - x_2) = -2(x - 3)\left(x + \frac{1}{2}\right) = (3 - x)(2x + 1)$.
+                        </p>
+                        <p><strong>3. Tableau de Signe :</strong>
+                            <br>Le coefficient $a = -2 < 0$. Le trinôme est du signe de $a$ (négatif) à l'extérieur des racines, et du signe contraire à $a$ (positif) entre les racines.
+                            <br>• $P(x) > 0$ pour $x \in \left]-\frac{1}{2}\,;\, 3\right[$
+                            <br>• $P(x) < 0$ pour $x \in \left]-\infty\,;\, -\frac{1}{2}\right[ \cup \left]3\,;\, +\infty\right[$
+                            <br>• $P(x) = 0$ pour $x \in \left\{-\frac{1}{2}\,;\, 3\right\}$
+                        </p>
+                    </div>
+                </div>
+
+                <!-- EXERCICE 5 -->
+                <div class="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition bg-slate-50/50">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="font-bold text-indigo-600 text-sm">Exercice 5 : Inéquation Rationnelle avec Piège</span>
+                        <span class="text-xs px-2 py-0.5 bg-red-100 text-red-800 rounded font-medium">Difficile</span>
+                    </div>
+                    <p class="text-sm text-slate-800 mb-4 font-medium">
+                        Résoudre dans $\mathbb{R}$ l'inéquation :
+                        $$\frac{x^2 - 3x + 2}{x - 4} \le 0$$
+                    </p>
+                    <button onclick="toggleSolution('sol5')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Afficher / Masquer la solution
+                    </button>
+                    <div id="sol5" class="hidden mt-4 p-4 bg-white rounded-lg border border-indigo-100 text-sm space-y-3 text-slate-700">
+                        <p><strong>Étape 1 : Condition d'existence (Domaine d'étude)</strong>
+                            <br>Le dénominateur ne doit pas s'annuler : $x - 4 \neq 0 \iff x \neq 4$. $D_E = \mathbb{R} \setminus \{4\}$.
+                        </p>
+                        <p><strong>Étape 2 : Étude du numérateur $N(x) = x^2 - 3x + 2$</strong>
+                            <br>$a+b+c = 1 - 3 + 2 = 0 \implies x_1 = 1$ et $x_2 = 2$.
+                            <br>Le coefficient $a = 1 > 0$, donc $N(x) \le 0$ entre 1 et 2.
+                        </p>
+                        <p><strong>Étape 3 : Tableau de signe joint</strong>
+                            <br>Placons les valeurs charnières : $-\infty$, $1$, $2$, $4$, $+\infty$.
+                            <br>• $x^2-3x+2$ : $+$ sur $]-\infty, 1]$, $-$ sur $[1, 2]$, $+$ sur $[2, +\infty[$
+                            <br>• $x - 4$ : $-$ sur $]-\infty, 4[$, $+$ sur $]4, +\infty[$
+                            <br>• Quotient : $-$ sur $]-\infty, 1]$, $+$ sur $[1, 2]$, $-$ sur $[2, 4[$, $+$ sur $]4, +\infty[$.
+                            <br><i>Note : En $x = 4$, le quotient n'est pas défini (double barre).</i>
+                        </p>
+                        <p><strong>Conclusion :</strong> On veut le quotient $\le 0$ :
+                            $$S = ]-\infty\,;\, 1] \cup [2\,;\, 4[$$
+                        </p>
+                    </div>
+                </div>
+
+                <!-- EXERCICE 6 -->
+                <div class="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition bg-slate-50/50">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="font-bold text-indigo-600 text-sm">Exercice 6 : Problème Concret de Modélisation</span>
+                        <span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded font-medium">Application</span>
+                    </div>
+                    <p class="text-sm text-slate-800 mb-4 font-medium">
+                        Un terrain rectangulaire a un périmètre de $50$ mètres et une aire de $144$ mètres carrés.
+                        Quelles sont les dimensions (longueur $L$ et largeur $l$) de ce terrain ?
+                    </p>
+                    <button onclick="toggleSolution('sol6')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Afficher / Masquer la solution
+                    </button>
+                    <div id="sol6" class="hidden mt-4 p-4 bg-white rounded-lg border border-indigo-100 text-sm space-y-3 text-slate-700">
+                        <p><strong>Mise en équation :</strong>
+                            <br>Soient $L$ et $l$ les dimensions du terrain ($L \ge l > 0$).
+                            <br>• Le demi-périmètre est $S = L + l = \frac{50}{2} = 25$.
+                            <br>• L'aire est $P = L \times l = 144$.
+                        </p>
+                        <p><strong>Propriété :</strong> Deux nombres dont la somme est $S$ et le produit est $P$ sont les solutions de l'équation du second degré :
+                            $$X^2 - S X + P = 0 \iff X^2 - 25X + 144 = 0$$
+                        </p>
+                        <p><strong>Résolution :</strong>
+                            <br>$\Delta = (-25)^2 - 4(1)(144) = 625 - 576 = 49 = 7^2$.
+                            <br>$$X_1 = \frac{25 - 7}{2} = \frac{18}{2} = 9 \quad ; \quad X_2 = \frac{25 + 7}{2} = \frac{32}{2} = 16$$
+                        </p>
+                        <p><strong>Conclusion :</strong>
+                            <br>La longueur du terrain est $L = 16\text{ m}$ et sa largeur est $l = 9\text{ m}$.
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-indigo-950 text-indigo-300 py-6 border-t border-indigo-900 mt-12 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>© 2026 Cours Interactif de Mathématiques. Conforme au programme officiel.</p>
+            <p class="text-indigo-400">Proposé pour une préparation complète aux épreuves et examens.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Script -->
+    <script>
+        // Toggle mobile menu
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Toggle solution visibility with MathJax re-render if needed
+        function toggleSolution(id) {
+            const sol = document.getElementById(id);
+            if (sol.classList.contains('hidden')) {
+                sol.classList.remove('hidden');
+                if (window.MathJax) {
+                    MathJax.typesetPromise([sol]);
+                }
+            } else {
+                sol.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
